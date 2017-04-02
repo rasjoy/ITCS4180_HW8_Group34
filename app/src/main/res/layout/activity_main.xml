@@ -6,4 +6,95 @@
     android:layout_height="match_parent"
     tools:context="com.example.joyrasmussen.hw8_group34.MainActivity">
 
+    <RelativeLayout
+        android:id="@+id/currentCityLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/noCurrent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/currentNotSet"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="23dp" />
+
+        <Button
+            android:id="@+id/setCurrentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/noCurrent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="19dp"
+            android:text="@string/setButton" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/searchCityLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/currentCityLayout"
+        android:layout_centerHorizontal="true">
+
+        <EditText
+            android:id="@+id/cityMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="0dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="@string/cityEdit" />
+
+        <EditText
+            android:id="@+id/countryMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/searchCityLayout"
+            android:layout_below="@+id/cityMain"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="@string/countryEdit" />
+
+        <Button
+            android:id="@+id/searchCityMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/countryMain"
+            android:layout_centerHorizontal="true"
+            android:text="@string/searchCity" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/savedCityLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/searchCityLayout"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:id="@+id/savedCitiesTextMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/defaultSavedCities"
+            android:textAlignment="center" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/savedCityLayout"
+            android:layout_below="@+id/savedCitiesTextMain"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
 </RelativeLayout>

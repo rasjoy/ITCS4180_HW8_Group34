@@ -3,4 +3,10 @@
     <string name="setting">Settings</string>
     <string name="savecity">Save City</string>
     <string name="setCurrent">Set as Current City</string>
+    <string name="currentNotSet">Current City not yet set</string>
+    <string name="setButton">Set Current City</string>
+    <string name="cityEdit">City Name (ie Charlotte)</string>
+    <string name="countryEdit">Country Name (ie US)</string>
+    <string name="searchCity">Search City</string>
+    <string name="defaultSavedCities">There are no cities to display./n Search for a city using  the search boxes and save.</string>
 </resources>
