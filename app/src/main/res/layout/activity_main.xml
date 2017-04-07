@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.joyrasmussen.hw8_group34.MainActivity">
@@ -11,17 +10,17 @@
         android:id="@+id/currentCityLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true">
 
         <TextView
             android:id="@+id/noCurrent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/currentNotSet"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="23dp"
-            android:text="@string/currentNotSet" />
+            android:layout_marginTop="23dp" />
 
         <Button
             android:id="@+id/setCurrentButton"
@@ -31,6 +30,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_marginTop="19dp"
+            android:onClick="setCurrentCityListenter"
             android:text="@string/setButton" />
     </RelativeLayout>
 
@@ -56,7 +56,6 @@
             android:id="@+id/countryMain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_below="@+id/cityMain"
             android:layout_centerHorizontal="true"
             android:ems="10"
@@ -69,6 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/countryMain"
             android:layout_centerHorizontal="true"
+            android:onClick="searchCityListener"
             android:text="@string/searchCity" />
 
     </RelativeLayout>
@@ -91,9 +91,8 @@
             android:textAlignment="center" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/savedCityRecycle"
+            android:id="@+id/savedCityRecycler"
             android:layout_width="match_parent"
-
             android:layout_height="match_parent"
             android:layout_below="@+id/savedCitiesTextMain"
             android:layout_centerHorizontal="true" />

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@android:color/darker_gray"
+    android:orientation="horizontal"
+    android:weightSum="1">
+
+    <ImageButton
+        android:id="@+id/savedButtonsavedMain"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@drawable/star_gray"
+        android:layout_alignParentBottom="true" />
+
+    <TextView
+        android:id="@+id/savedCityNameMain"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/relativeHolder"
+        android:text="@string/defaultCity" />
+
+    <LinearLayout
+        android:id="@+id/relativeHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/savedButtonsavedMain"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tempMainSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="@string/defaulttemp" />
+
+        <TextView
+            android:id="@+id/updateMainSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="end"
+            android:text="@string/defaultTime" />
+    </LinearLayout>
+
+</RelativeLayout>

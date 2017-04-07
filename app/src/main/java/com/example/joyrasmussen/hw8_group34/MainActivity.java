@@ -5,10 +5,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
     static final String API_Key = "zzAnkMX16zZhnHzpY2LvaJFp69R7JDM4";
-    static final String Location_API = "http://dataservice.accuweather.com/locations/v1/\n" +
+    static final String Location_API = "http://dataservice.accuweather.com/locations/v1/" +
             "{COUNTRY_CODE}/search?apikey={YOUR_API_KEY}&q={CITY_NAME}";
     static final String CURRENT_FORCAST = "http://dataservice.accuweather.com/" +
             "currentconditions/v1/{CITY_UNIQUE_KEY}?apikey={YOUR_API_KEY}";
@@ -39,4 +40,15 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu, menu);
        return true;
     }
+    public void setCurrentCityListenter(View V){
+
+
+
+    }
+
+    public void searchCityListener(View v){
+
+    }
+
+
 }

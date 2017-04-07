@@ -9,4 +9,7 @@
     <string name="countryEdit">Country Name (ie US)</string>
     <string name="searchCity">Search City</string>
     <string name="defaultSavedCities">There are no cities to display./n Search for a city using  the search boxes and save.</string>
+    <string name="defaultCity">Charlotte, NC</string>
+    <string name="defaulttemp">Temperature: 85.95 ° F</string>
+    <string name="defaultTime">Last updated: x min ago</string>
 </resources>
