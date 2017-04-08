@@ -41,10 +41,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import org.json.JSONException;
+import org.ocpsoft.prettytime.PrettyTime;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import okhttp3.Call;
@@ -99,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
     SharedPreferences sharedPreferences;
     LinearLayoutManager mLayoutManager;
 
+    PrettyTime prettyTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         currentUpdatedLast = (TextView) findViewById(R.id.currentUpdatedLast);
         currentWeatherImage = (ImageView) findViewById(R.id.currentWeatherImage);
 
+        prettyTime = new PrettyTime();
 
         SavedCity charlotte = new SavedCity("349818", "Charlotte", "US", false);
         savedCityReference.child("349818").setValue(charlotte);
@@ -417,7 +421,10 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
                 currentCity.setText(current_city);
                 currentTemp.setText(celcius + "°C");
                 currentWeather.setText(weather);
-                currentUpdatedLast.setText(time);
+
+                Date date = new Date(Long.parseLong(time));
+
+                currentUpdatedLast.setText(prettyTime.format(date));
 
                 Picasso.Builder builder = new Picasso.Builder(MainActivity.this);
                 builder.listener(new Picasso.Listener()
