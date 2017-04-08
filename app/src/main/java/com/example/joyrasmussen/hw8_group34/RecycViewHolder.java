@@ -51,14 +51,19 @@ public class RecycViewHolder extends RecyclerView.ViewHolder{
     public void setFavorite(boolean isFav){
         if (isFav){
             favorite.setImageResource(R.drawable.star_gold);
+        }else{
+            favorite.setImageResource(R.drawable.star_gray);
         }
     }
 
     public static String parseDate(String date) throws ParseException {
-        java.util.Date d = new java.util.Date(Long.parseLong(date)*1000);
+        if(date != null) {
+            java.util.Date d = new java.util.Date(Long.parseLong(date) * 1000);
 
-        return getHowLongAgoDescription(d);
-
+            return getHowLongAgoDescription(d);
+        }else{
+            return "";
+        }
 
 
     }
@@ -67,7 +72,6 @@ public class RecycViewHolder extends RecyclerView.ViewHolder{
         PrettyTime p = new PrettyTime(locale);
         return p.format(entered);
     }
-
 
 
 }
