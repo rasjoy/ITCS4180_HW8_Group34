@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -84,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
     Query query = savedCityReference.orderByChild("isFav");
 
     static String current_city = "currCity";
+
+    static String current_city = "currentCity";
     static String current_country = "currentCountry";
     static String current_city_key = "";
     String currentWeatherIcon;
@@ -114,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         currentWeatherImage = (ImageView) findViewById(R.id.currentWeatherImage);
 
 
-        SavedCity charlotte = new SavedCity("349818", "Charlotte", "US", false);
+        SavedCity charlotte = new SavedCity("349818", "Charlotte", "US", true);
         savedCityReference.child("349818").setValue(charlotte);
 
 
@@ -168,18 +172,24 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
         //Check if current city/country is set in shared preferences
 
-        sharedPreferences = this.getSharedPreferences("com.example.joyrasmussen.hw8_group34", Context.MODE_PRIVATE);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         current_city = sharedPreferences.getString("currentCity", "");
         current_country = sharedPreferences.getString("currentCountry", "");
         current_city_key = sharedPreferences.getString("currentCityKey", "");
 
         if (!current_city.equals("") && !current_country.equals("")) {
+        populateRecyclerView();
+        prefListener();
+
+        if(!current_city.equals("") && !current_country.equals("")){
+
             //Hide button & textview, show weather widgets
             alternateDisplay(current_city_key);
         }
 
 
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -218,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 SavedCity city = dataSnapshot.getValue(SavedCity.class);
-                Log.d("onDataChange: ", "city " + city.getName());
+
 
 
             }
@@ -294,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         });
     }
 
-    public HashMap<String, String> getCurrentWeatherDetails(String id) throws IOException {
+    public void getCurrentWeatherDetails(final String id) throws IOException {
         final HashMap<String, String>[] tempAndTime = new HashMap[]{new HashMap<>()};
         String searchString = CURRENT_FORCAST.replace("{CITY_UNIQUE_KEY}", id).replace("{YOUR_API_KEY}", API_Key);
         OkHttpClient client = new OkHttpClient();
@@ -312,11 +322,28 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
             public void onFailure(Call call, IOException e) {
 
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     tempAndTime[0] = getTempTime(response.body().string());
+                    savedCityReference.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            SavedCity savedCity = dataSnapshot.getValue(SavedCity.class);
+
+                                savedCity.setTemperature(tempAndTime[0].get("Celcius"));
+
+                            savedCity.setTime(tempAndTime[0].get("Time"));
+                            savedCity.setTempFar(tempAndTime[0].get("Fari"));
+
+                            savedCityReference.child(id).setValue(savedCity);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -324,6 +351,8 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         });
         return tempAndTime[0];
     }
+
+        }
 
     public void alternateDisplay(String key) {
 
@@ -429,6 +458,101 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         return tempAndTime;
     }
 
+public void  populateRecyclerView(){
 
+    savedRecyclerView = (RecyclerView) findViewById(R.id.savedCityRecycler);
+
+
+    mAdapter = new FirebaseRecyclerAdapter<SavedCity, RecycViewHolder>( SavedCity.class, R.layout.saved_city_layout, RecycViewHolder.class, query) {
+
+        @Override
+        protected void populateViewHolder(final RecycViewHolder viewHolder, final SavedCity model, final int position) {
+            final DatabaseReference savedRef = getRef(position);
+            final String key = savedRef.getKey();
+            Log.d("populateViewHolder: ", model.get_id() + "getKey " + key + "name " + model.getName());
+            viewHolder.setCityName(model.getName() + ", " + model.getCountry());
+            viewHolder.setFavorite(model.isFav());
+            HashMap<String, String> populateMap = new HashMap<>();
+
+            try {
+                getCurrentWeatherDetails(model.get_id());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            String unit = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("temp_unit", "");
+            Log.d( "populateViewHolder: ", "temp " +unit);
+
+
+            if (unit.equals("c")) {
+                viewHolder.setTemp(model.getTemperature(), "C");
+            }else{
+                viewHolder.setTemp(model.getTempFar(), "f");
+
+            }
+            try {
+                viewHolder.setUpdate(model.getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            viewHolder.favorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (model.isFav()){
+                        model.setFav(false);
+                        viewHolder.setFavorite(false);
+                    }else{
+                        model.setFav(true);
+                        viewHolder.setFavorite(true);
+                    }
+                    savedCityReference.child(model.get_id()).setValue(model);
+                }
+            });
+
+            viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    savedCityReference.child(key).removeValue();
+                    return false;
+                }
+            });
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+
+        @Override
+        protected void onDataChanged() {
+            super.onDataChanged();
+
+        }
+    };
+    mLayoutManager = new LinearLayoutManager(this);
+    mLayoutManager.setReverseLayout(true);
+    mLayoutManager.setStackFromEnd(true);
+    savedRecyclerView.setLongClickable(true);
+
+    savedRecyclerView.setHasFixedSize(false);
+    savedRecyclerView.setLayoutManager(mLayoutManager);
+    savedRecyclerView.setAdapter(mAdapter);
+}
+public void prefListener(){
+    sharedPreferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if(key.equals("temp_unit")){
+                populateRecyclerView();
+
+            }
+        }
+    });
+
+
+}
 }
 
