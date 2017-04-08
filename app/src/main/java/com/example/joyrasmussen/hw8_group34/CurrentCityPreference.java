@@ -34,9 +34,9 @@ public class CurrentCityPreference extends DialogPreference {
         city = (EditText) view.findViewById(R.id.cityTextDialog);
         country = (EditText) view.findViewById(R.id.countryEditDialog);
 
-        if(pref.getString(getKey()+ MainActivity.CURRENT_CITY, null) != null){
-            city.setText(pref.getString(getKey()+ MainActivity.CURRENT_CITY, null));
-            country.setText(getKey()+ MainActivity.CURRENT_COUNTRY, null);
+        if(pref.getString(getKey()+ MainActivity.current_city, null) != null){
+            city.setText(pref.getString(getKey()+ MainActivity.current_city, null));
+            country.setText(getKey()+ MainActivity.current_country, null);
             setPositiveButtonText(R.string.update);
             setNegativeButtonText(R.string.cancel);
         }

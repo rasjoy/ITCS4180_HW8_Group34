@@ -1,10 +1,11 @@
 package com.example.joyrasmussen.hw8_group34;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,6 +13,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
@@ -23,7 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EditCityDialogFragment.NoticeDialogListener {
+
     static final String API_Key = "zzAnkMX16zZhnHzpY2LvaJFp69R7JDM4";
     static final String Location_API = "http://dataservice.accuweather.com/locations/v1/" +
             "{COUNTRY_CODE}/search?apikey={YOUR_API_KEY}&q={CITY_NAME}";
@@ -34,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
             "daily/5day/{CITY_UNIQUE_KEY}?apikey={YOUR_API_KEY}";
     static final String ICON = " http://developer.accuweather.com/sites/default/files/{Image_ID}-" +
             "s.png";
+
     static final String CURRENT_CITY = "currCity";
     static final String CURRENT_COUNTRY = "currentCountry";
     static final String CHILD_SAVED = "savedCity";
@@ -44,10 +50,20 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView savedRecyclerView;
     Query query = savedCityReference.orderByChild("isFav");
 
+
+    static String current_city = "currCity";
+    static String current_country = "currentCountry";
+    static String current_city_key = "";
+
+    SharedPreferences sharedPreferences;
+    private Object DialogFragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         SavedCity charlotte = new SavedCity("349818", "Charlotte", "US", false);
         savedCityReference.child("349818").setValue(charlotte);
@@ -99,6 +115,25 @@ public class MainActivity extends AppCompatActivity {
         savedRecyclerView.setAdapter(mAdapter);
 
 
+        //Check if current city/country is set in shared preferences
+
+        sharedPreferences = this.getSharedPreferences("com.example.joyrasmussen.hw8_group34", Context.MODE_PRIVATE);
+        current_city = sharedPreferences.getString("currentCity", "");
+        current_country = sharedPreferences.getString("currentCountry", "");
+        current_city_key = sharedPreferences.getString("currentCityKey", "");
+
+        if(!current_city.equals("") && !current_country.equals("")){
+
+            //Hide button & textview
+            Button setCurrentCityButton = (Button) findViewById(R.id.setCurrentButton);
+            TextView citynotSetTextView = (TextView) findViewById(R.id.noCurrent);
+            citynotSetTextView.setVisibility(View.GONE);
+            setCurrentCityButton.setVisibility(View.GONE);
+
+            //display weather widgets
+        }
+
+
     }
 
     @Override
@@ -116,37 +151,55 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-       return true;
+        return true;
     }
-    public void setCurrentCityListenter(View V){
 
+    public void setCurrentCityListener(View V){
 
-
+        EditCityDialogFragment alert = new EditCityDialogFragment();
+        alert.show(getFragmentManager(), "EditCityDialog");
     }
 
     public void searchCityListener(View v){
 
-    }
 
+    }
+    
     @Override
     protected void onStart() {
         super.onStart();
 
-     savedCityReference.addValueEventListener(new ValueEventListener() {
-         @Override
-         public void onDataChange(DataSnapshot dataSnapshot) {
-            SavedCity city = dataSnapshot.getValue(SavedCity.class);
-             Log.d( "onDataChange: ", "city " + city.getName());
+        savedCityReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                SavedCity city = dataSnapshot.getValue(SavedCity.class);
+                Log.d("onDataChange: ", "city " + city.getName());
 
-         }
+            }
 
-         @Override
-         public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-         }
-     });
+            }
+        });
+
+    }
 
 
+    //This method gets the city/country when the user sets the current one
+    public void onDialogPositiveClick(DialogFragment dialog, String city, String country) {
+
+        current_city = city;
+        current_country = country;
+
+        //get city key
+        //store country, city, key in shared prefs:
+
+        sharedPreferences.edit().putString("currentCity", city).apply();
+        sharedPreferences.edit().putString("currentCountry", country).apply();
+
+
+        Toast.makeText(this, "Current city details saved", Toast.LENGTH_SHORT).show();
 
 
     }
