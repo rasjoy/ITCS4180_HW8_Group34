@@ -26,7 +26,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements EditCityDialogFragment.NoticeDialogListener {
 
@@ -68,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
         SavedCity charlotte = new SavedCity("349818", "Charlotte", "US", false);
         savedCityReference.child("349818").setValue(charlotte);
-        savedCityReference.child("121212").setValue(new SavedCity("349818", "Charlotte", "US", true));
+        //savedCityReference.child("121212").setValue(new SavedCity("349818", "Charlotte", "US", true));
 
 
         savedRecyclerView = (RecyclerView) findViewById(R.id.savedCityRecycler);
@@ -204,7 +215,43 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
 
         Toast.makeText(this, "Current city details saved", Toast.LENGTH_SHORT).show();
-
-
     }
+    public void getCurrentWeatherDetails(String id) throws IOException {
+
+        String searchString  = CURRENT_FORCAST.replace("{CITY_UNIQUE_KEY}", id).replace("{YOUR_API_KEY}", API_Key);
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(searchString)
+                .get()
+                .addHeader("cache-control", "no-cache")
+                .addHeader("postman-token", "cbefb17a-2d38-8f5a-1e97-21ea76fd4535")
+                .build();
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    getTempTime(response.body().string());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+    public HashMap<String, String> getTempTime(String response) throws JSONException {
+
+        HashMap<String, String> tempAndTime = new HashMap<>();
+        tempAndTime = new CurrentWeatherParser().parseInput(response);
+        return tempAndTime;
+    }
+
+
+
 }

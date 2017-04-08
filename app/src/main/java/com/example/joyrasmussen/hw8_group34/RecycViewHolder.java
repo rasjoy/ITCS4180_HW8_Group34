@@ -55,7 +55,7 @@ public class RecycViewHolder extends RecyclerView.ViewHolder{
     }
 
     public static String parseDate(String date) throws ParseException {
-        java.util.Date d = new java.util.Date(Long.parseLong(date));
+        java.util.Date d = new java.util.Date(Long.parseLong(date)*1000);
 
         return getHowLongAgoDescription(d);
 
