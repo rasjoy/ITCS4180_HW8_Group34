@@ -216,8 +216,8 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
         Toast.makeText(this, "Current city details saved", Toast.LENGTH_SHORT).show();
     }
-    public void getCurrentWeatherDetails(String id) throws IOException {
-
+    public HashMap<String, String> getCurrentWeatherDetails(String id) throws IOException {
+        final HashMap<String, String>[] tempAndTime = new HashMap[]{new HashMap<>()};
         String searchString  = CURRENT_FORCAST.replace("{CITY_UNIQUE_KEY}", id).replace("{YOUR_API_KEY}", API_Key);
         OkHttpClient client = new OkHttpClient();
 
@@ -238,12 +238,13 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    getTempTime(response.body().string());
+                   tempAndTime[0] = getTempTime(response.body().string());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
+        return tempAndTime[0];
     }
     public HashMap<String, String> getTempTime(String response) throws JSONException {
 
