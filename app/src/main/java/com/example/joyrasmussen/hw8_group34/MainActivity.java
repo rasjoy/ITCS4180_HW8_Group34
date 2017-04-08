@@ -1,5 +1,6 @@
 package com.example.joyrasmussen.hw8_group34;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,7 +18,8 @@ public class MainActivity extends AppCompatActivity {
             "daily/5day/{CITY_UNIQUE_KEY}?apikey={YOUR_API_KEY}";
     static final String ICON = " http://developer.accuweather.com/sites/default/files/{Image_ID}-" +
             "s.png";
-
+    static final String CURRENT_CITY = "currCity";
+    static final String CURRENT_COUNTRY = "currentCountry";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.settingsItem){
             //preference activity here
-
+            Intent intent = new Intent(this, PreferencesActivity.class);
+            startActivity(intent);
+            return true;
         }
         return true;
     }

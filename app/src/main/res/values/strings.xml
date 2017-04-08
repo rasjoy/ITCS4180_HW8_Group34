@@ -12,4 +12,20 @@
     <string name="defaultCity">Charlotte, NC</string>
     <string name="defaulttemp">Temperature: 85.95 ° F</string>
     <string name="defaultTime">Last updated: x min ago</string>
+    <string name="temp_unit">temp_unit</string>
+    <string name="temperature_unit">Temperature Unit</string>
+    <string name="choose_unit_summary">Choose between Celsius and Fahrenheit</string>
+    <string name="celsius">c</string>
+    <string name="temperature_unit_dialog_title">Select Temperature Unit</string>
+    <string name="edit_pref_title">Current City</string>
+    <string name="current_city_summary">Change Current City</string>
+    <string name="curr_city">curr_city</string>
+    <string name="currenty_city_dialog">Enter City Details</string>
+    <string name="update_city_dialog">Update City Details</string>
+    <string name="cancel">Cancel</string>
+    <string name="set">Set</string>
+    <string name="update">Update</string>
+    <string name="done">Done</string>
+    <string name="entry_city">Enter Your City</string>
+    <string name="enter_county">Enter Your Country</string>
 </resources>
