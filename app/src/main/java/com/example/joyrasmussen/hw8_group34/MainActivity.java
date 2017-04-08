@@ -42,7 +42,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity implements EditCityDialogFragment.NoticeDialogListener {
+public class MainActivity extends AppCompatActivity implements EditCityDialogFragment.NoticeDialogListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     static final String API_Key = "zzAnkMX16zZhnHzpY2LvaJFp69R7JDM4";
     static final String Location_API = "http://dataservice.accuweather.com/locations/v1/" +
@@ -103,12 +103,13 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         //Check if current city/country is set in shared preferences
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         current_city = sharedPreferences.getString("currentCity", "");
         current_country = sharedPreferences.getString("currentCountry", "");
         current_city_key = sharedPreferences.getString("currentCityKey", "");
 
         populateRecyclerView();
-        prefListener();
+
 
         if(!current_city.equals("") && !current_country.equals("")){
 
@@ -290,7 +291,7 @@ public void  populateRecyclerView(){
             if (unit.equals("c")) {
                 viewHolder.setTemp(model.getTemperature(), "C");
             }else{
-                viewHolder.setTemp(model.getTempFar(), "f");
+                viewHolder.setTemp(model.getTempFar(), "F");
 
             }
             try {
@@ -343,18 +344,25 @@ public void  populateRecyclerView(){
     savedRecyclerView.setLayoutManager(mLayoutManager);
     savedRecyclerView.setAdapter(mAdapter);
 }
-public void prefListener(){
-    sharedPreferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if(key.equals("temp_unit")){
-                populateRecyclerView();
 
-            }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+       sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        if(key.equals("temp_unit")){
+           populateRecyclerView();
         }
-    });
-
-
-}
+    }
 }
 
