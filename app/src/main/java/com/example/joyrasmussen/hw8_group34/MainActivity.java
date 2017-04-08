@@ -27,6 +27,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -36,6 +41,13 @@ import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -62,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
     DatabaseReference savedCityReference =mDatabase.child(CHILD_SAVED);
     RecyclerView savedRecyclerView;
     Query query = savedCityReference.orderByChild("isFav");
-
 
     static String current_city = "currCity";
     static String current_country = "currentCountry";
@@ -163,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.settingsItem){
@@ -192,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
 
     }
-    
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -202,6 +212,8 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
             public void onDataChange(DataSnapshot dataSnapshot) {
                 SavedCity city = dataSnapshot.getValue(SavedCity.class);
                 Log.d("onDataChange: ", "city " + city.getName());
+
+
 
             }
 
@@ -227,6 +239,54 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         sharedPreferences.edit().putString("currentCountry", country).apply();
 
         Toast.makeText(this, "Current city details saved", Toast.LENGTH_SHORT).show();
+
+        getCityCode(city, country);
+
+    }
+
+    public void getCityCode(String city, String countryCode){
+
+        OkHttpClient client = new OkHttpClient();
+
+        String url = Location_API;
+        url = url.replace("{YOUR_API_KEY}", API_Key)
+                .replace("{COUNTRY_CODE}", countryCode)
+                .replace("{CITY_NAME}", city);
+
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                Headers responseHeaders = response.headers();
+                for (int i = 0, size = responseHeaders.size(); i < size; i++) {
+                    System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                }
+
+                try {
+                    String body = response.body().string();
+
+                    Log.i("json: ", body.substring(0, 100));
+                    JSONArray arr = new JSONArray(body);
+                    JSONObject obj = arr.getJSONObject(0);
+                    current_city_key = obj.getString("Key");
+                    Log.i("key: ", current_city_key);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        });
     }
 
     public HashMap<String, String> getCurrentWeatherDetails(String id) throws IOException {
