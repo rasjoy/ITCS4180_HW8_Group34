@@ -193,7 +193,6 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
             alternateDisplay(current_city_key);
         }
 
-//test
     }
 
 
