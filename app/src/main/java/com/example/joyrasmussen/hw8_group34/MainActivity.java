@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -157,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 SavedCity city = dataSnapshot.getValue(SavedCity.class);
-                Log.d("onDataChange: ", "city " + city.getName());
+
 
             }
 
@@ -263,13 +264,13 @@ public void  populateRecyclerView(){
 
     savedRecyclerView = (RecyclerView) findViewById(R.id.savedCityRecycler);
 
+
     mAdapter = new FirebaseRecyclerAdapter<SavedCity, RecycViewHolder>( SavedCity.class, R.layout.saved_city_layout, RecycViewHolder.class, query) {
 
         @Override
         protected void populateViewHolder(final RecycViewHolder viewHolder, final SavedCity model, final int position) {
-
-            DatabaseReference savedRef = getRef(position);
-            String key = savedRef.getKey();
+            final DatabaseReference savedRef = getRef(position);
+            final String key = savedRef.getKey();
             Log.d("populateViewHolder: ", model.get_id() + "getKey " + key + "name " + model.getName());
             viewHolder.setCityName(model.getName() + ", " + model.getCountry());
             viewHolder.setFavorite(model.isFav());
@@ -311,6 +312,20 @@ public void  populateRecyclerView(){
                     savedCityReference.child(model.get_id()).setValue(model);
                 }
             });
+
+            viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    savedCityReference.child(key).removeValue();
+                    return false;
+                }
+            });
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
 
         @Override
@@ -322,6 +337,7 @@ public void  populateRecyclerView(){
     mLayoutManager = new LinearLayoutManager(this);
     mLayoutManager.setReverseLayout(true);
     mLayoutManager.setStackFromEnd(true);
+    savedRecyclerView.setLongClickable(true);
 
     savedRecyclerView.setHasFixedSize(false);
     savedRecyclerView.setLayoutManager(mLayoutManager);

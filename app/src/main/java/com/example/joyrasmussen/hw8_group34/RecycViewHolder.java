@@ -72,6 +72,9 @@ public class RecycViewHolder extends RecyclerView.ViewHolder{
         PrettyTime p = new PrettyTime(locale);
         return p.format(entered);
     }
+    public interface ClickListener{
+        public void onItemClick(View view, int position);
+    }
 
 
 }
