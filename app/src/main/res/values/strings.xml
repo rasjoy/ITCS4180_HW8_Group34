@@ -36,4 +36,9 @@
     <string name="enter_county">Enter Your Country</string>
     <string name="temperature">Temperature: </string>
     <string name="updated">Updated: </string>
+    <string name="dailyForcast">Daily Forcast for</string>
+    <string name="headlines">Headlines</string>
+    <string name="forcastOn">Forcast On</string>
+    <string name="condit">Conditions</string>
+    <string name="day">Day</string>
 </resources>
