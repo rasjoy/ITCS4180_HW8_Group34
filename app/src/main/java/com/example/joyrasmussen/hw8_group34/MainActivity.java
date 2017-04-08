@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +68,14 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
     static String current_country = "currentCountry";
     static String current_city_key = "";
 
+    TextView currentCity;
+    TextView currentWeather;
+    TextView currentTemp;
+    TextView currentTempTV;
+    TextView currentUpdatedTV;
+    TextView currentUpdatedLast;
+    ImageView currentWeatherImage;
+
     SharedPreferences sharedPreferences;
     LinearLayoutManager mLayoutManager;
 
@@ -75,6 +84,14 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        currentCity = (TextView) findViewById(R.id.currentCityName);
+        currentWeather = (TextView) findViewById(R.id.currentWeather);
+        currentTemp = (TextView) findViewById(R.id.currentTemp);
+        currentTempTV = (TextView) findViewById(R.id.currentTempTV);
+        currentUpdatedTV = (TextView) findViewById(R.id.currentUpdatedTV);
+        currentUpdatedLast = (TextView) findViewById(R.id.currentUpdatedLast);
+        currentWeatherImage = (ImageView) findViewById(R.id.currentWeatherImage);
 
 
         SavedCity charlotte = new SavedCity("349818", "Charlotte", "US", false);
@@ -138,17 +155,14 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
         if(!current_city.equals("") && !current_country.equals("")){
 
-            //Hide button & textview
-            Button setCurrentCityButton = (Button) findViewById(R.id.setCurrentButton);
-            TextView citynotSetTextView = (TextView) findViewById(R.id.noCurrent);
-            citynotSetTextView.setVisibility(View.GONE);
-            setCurrentCityButton.setVisibility(View.GONE);
-
+            //Hide button & textview, show weather widgets
+            alternateDisplay();
             //display weather widgets
         }
 
 
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -212,9 +226,9 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         sharedPreferences.edit().putString("currentCity", city).apply();
         sharedPreferences.edit().putString("currentCountry", country).apply();
 
-
         Toast.makeText(this, "Current city details saved", Toast.LENGTH_SHORT).show();
     }
+
     public HashMap<String, String> getCurrentWeatherDetails(String id) throws IOException {
         final HashMap<String, String>[] tempAndTime = new HashMap[]{new HashMap<>()};
         String searchString  = CURRENT_FORCAST.replace("{CITY_UNIQUE_KEY}", id).replace("{YOUR_API_KEY}", API_Key);
@@ -233,18 +247,37 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
             public void onFailure(Call call, IOException e) {
 
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                   tempAndTime[0] = getTempTime(response.body().string());
+                    tempAndTime[0] = getTempTime(response.body().string());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
         return tempAndTime[0];
+        }
+
+    public void alternateDisplay(){
+
+        Button setCurrentCityButton = (Button) findViewById(R.id.setCurrentButton);
+        TextView citynotSetTextView = (TextView) findViewById(R.id.noCurrent);
+        citynotSetTextView.setVisibility(View.GONE);
+        setCurrentCityButton.setVisibility(View.GONE);
+
+        currentCity.setVisibility(View.VISIBLE);
+        currentTemp.setVisibility(View.VISIBLE);
+        currentTempTV.setVisibility(View.VISIBLE);
+        currentUpdatedLast.setVisibility(View.VISIBLE);
+        currentUpdatedTV.setVisibility(View.VISIBLE);
+        currentWeather.setVisibility(View.VISIBLE);
+        currentWeatherImage.setVisibility(View.VISIBLE);
+
+
+
     }
+
     public HashMap<String, String> getTempTime(String response) throws JSONException {
 
         HashMap<String, String> tempAndTime = new HashMap<>();
@@ -253,5 +286,5 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
     }
 
 
-
 }
+
