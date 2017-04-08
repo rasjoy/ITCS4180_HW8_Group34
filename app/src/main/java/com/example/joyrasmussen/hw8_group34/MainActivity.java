@@ -4,7 +4,12 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,12 +31,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -59,25 +67,26 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
             "{COUNTRY_CODE}/search?apikey={YOUR_API_KEY}&q={CITY_NAME}";
     static final String CURRENT_FORCAST = "http://dataservice.accuweather.com/" +
             "currentconditions/v1/{CITY_UNIQUE_KEY}?apikey={YOUR_API_KEY}";
-    static final String   PREFERENCES = "preferences";
-    static final String FIVE_DAY_FORCAST = " http://dataservice.accuweather.com/forecasts/v1/"+
+    static final String PREFERENCES = "preferences";
+    static final String FIVE_DAY_FORCAST = " http://dataservice.accuweather.com/forecasts/v1/" +
             "daily/5day/{CITY_UNIQUE_KEY}?apikey={YOUR_API_KEY}";
-    static final String ICON = " http://developer.accuweather.com/sites/default/files/{Image_ID}-" +
+    static final String ICON = "https://developer.accuweather.com/sites/default/files/{Image_ID}-" +
             "s.png";
 
     static final String CURRENT_CITY = "currCity";
     static final String CURRENT_COUNTRY = "currentCountry";
     static final String CHILD_SAVED = "savedCity";
 
-    DatabaseReference mDatabase =  FirebaseDatabase.getInstance().getReference();
+    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     FirebaseRecyclerAdapter<SavedCity, RecycViewHolder> mAdapter;
-    DatabaseReference savedCityReference =mDatabase.child(CHILD_SAVED);
+    DatabaseReference savedCityReference = mDatabase.child(CHILD_SAVED);
     RecyclerView savedRecyclerView;
     Query query = savedCityReference.orderByChild("isFav");
 
     static String current_city = "currCity";
     static String current_country = "currentCountry";
     static String current_city_key = "";
+    String currentWeatherIcon;
 
     TextView currentCity;
     TextView currentWeather;
@@ -111,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
         savedRecyclerView = (RecyclerView) findViewById(R.id.savedCityRecycler);
 
-        mAdapter = new FirebaseRecyclerAdapter<SavedCity, RecycViewHolder>( SavedCity.class, R.layout.saved_city_layout, RecycViewHolder.class, query) {
+        mAdapter = new FirebaseRecyclerAdapter<SavedCity, RecycViewHolder>(SavedCity.class, R.layout.saved_city_layout, RecycViewHolder.class, query) {
 
             @Override
             protected void populateViewHolder(RecycViewHolder viewHolder, final SavedCity model, final int position) {
@@ -132,11 +141,11 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
                 viewHolder.favorite.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (model.isFav()){
+                        if (model.isFav()) {
                             model.setFav(false);
-                    }else{
-                        model.setFav(true);
-                    }
+                        } else {
+                            model.setFav(true);
+                        }
                         savedCityReference.child(model.get_id()).setValue(model);
                     }
                 });
@@ -164,11 +173,9 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         current_country = sharedPreferences.getString("currentCountry", "");
         current_city_key = sharedPreferences.getString("currentCityKey", "");
 
-        if(!current_city.equals("") && !current_country.equals("")){
-
+        if (!current_city.equals("") && !current_country.equals("")) {
             //Hide button & textview, show weather widgets
-            alternateDisplay();
-            //display weather widgets
+            alternateDisplay(current_city_key);
         }
 
 
@@ -176,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.settingsItem){
+        if (item.getItemId() == R.id.settingsItem) {
             //preference activity here
             Intent intent = new Intent(this, PreferencesActivity.class);
             startActivity(intent);
@@ -192,13 +199,13 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         return true;
     }
 
-    public void setCurrentCityListener(View V){
+    public void setCurrentCityListener(View V) {
 
         EditCityDialogFragment alert = new EditCityDialogFragment();
         alert.show(getFragmentManager(), "EditCityDialog");
     }
 
-    public void searchCityListener(View v){
+    public void searchCityListener(View v) {
 
 
     }
@@ -214,7 +221,6 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
                 Log.d("onDataChange: ", "city " + city.getName());
 
 
-
             }
 
             @Override
@@ -225,15 +231,11 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
     }
 
-
     //This method gets the city/country when the user sets the current one
     public void onDialogPositiveClick(DialogFragment dialog, String city, String country) {
 
         current_city = city;
         current_country = country;
-
-        //get city key
-        //store country, city, key in shared prefs:
 
         sharedPreferences.edit().putString("currentCity", city).apply();
         sharedPreferences.edit().putString("currentCountry", country).apply();
@@ -244,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
     }
 
-    public void getCityCode(String city, String countryCode){
+    public void getCityCode(String city, String countryCode) {
 
         OkHttpClient client = new OkHttpClient();
 
@@ -259,11 +261,13 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
-            @Override public void onFailure(Call call, IOException e) {
+            @Override
+            public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
             }
 
-            @Override public void onResponse(Call call, Response response) throws IOException {
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
                 Headers responseHeaders = response.headers();
@@ -274,11 +278,12 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
                 try {
                     String body = response.body().string();
 
-                    Log.i("json: ", body.substring(0, 100));
                     JSONArray arr = new JSONArray(body);
                     JSONObject obj = arr.getJSONObject(0);
                     current_city_key = obj.getString("Key");
-                    Log.i("key: ", current_city_key);
+
+                    sharedPreferences.edit().putString("currentCityKey", current_city_key).apply();
+                    alternateDisplay(current_city_key);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -291,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
     public HashMap<String, String> getCurrentWeatherDetails(String id) throws IOException {
         final HashMap<String, String>[] tempAndTime = new HashMap[]{new HashMap<>()};
-        String searchString  = CURRENT_FORCAST.replace("{CITY_UNIQUE_KEY}", id).replace("{YOUR_API_KEY}", API_Key);
+        String searchString = CURRENT_FORCAST.replace("{CITY_UNIQUE_KEY}", id).replace("{YOUR_API_KEY}", API_Key);
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -307,6 +312,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
             public void onFailure(Call call, IOException e) {
 
             }
+
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
@@ -317,9 +323,56 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
             }
         });
         return tempAndTime[0];
-        }
+    }
 
-    public void alternateDisplay(){
+    public void alternateDisplay(String key) {
+
+        OkHttpClient client = new OkHttpClient();
+
+        String url = CURRENT_FORCAST;
+        url = url.replace("{CITY_UNIQUE_KEY}", key)
+                .replace("{YOUR_API_KEY}", API_Key);
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                Headers responseHeaders = response.headers();
+                for (int i = 0, size = responseHeaders.size(); i < size; i++) {
+                    System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                }
+
+                String body = response.body().string();
+
+                CurrentWeatherParser parser = new CurrentWeatherParser();
+                HashMap<String, String> values;
+
+                try {
+                    values = parser.parseInput(body);
+
+                    currentWeatherIcon = values.get("WeatherIcon");
+                    updateUI(values.get("WeatherIcon"),
+                            values.get("Fari"),
+                            values.get("Time"),
+                            values.get("WeatherText"),
+                            values.get("Celcius"));
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
 
         Button setCurrentCityButton = (Button) findViewById(R.id.setCurrentButton);
         TextView citynotSetTextView = (TextView) findViewById(R.id.noCurrent);
@@ -333,9 +386,40 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         currentUpdatedTV.setVisibility(View.VISIBLE);
         currentWeather.setVisibility(View.VISIBLE);
         currentWeatherImage.setVisibility(View.VISIBLE);
+    }
 
+    public void updateUI(String icon, String fahrenheit, final String time, final String weather, final String celcius) {
 
+        String imageURL = ICON;
 
+        if (currentWeatherIcon.length() == 1) {
+            currentWeatherIcon = "0" + currentWeatherIcon;
+        }
+
+        final String imageUrl = imageURL.replace("{Image_ID}", currentWeatherIcon);
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+
+                currentCity.setText(current_city);
+                currentTemp.setText(celcius + "°C");
+                currentWeather.setText(weather);
+                currentUpdatedLast.setText(time);
+
+                Picasso.Builder builder = new Picasso.Builder(MainActivity.this);
+                builder.listener(new Picasso.Listener()
+                {
+                    @Override
+                    public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
+                    {
+                        exception.printStackTrace();
+                        Log.i("uri: ", uri + "");
+                    }
+                });
+                builder.build().load(imageUrl).into(currentWeatherImage);
+            }
+        });
     }
 
     public HashMap<String, String> getTempTime(String response) throws JSONException {
