@@ -1,5 +1,6 @@
 package com.example.joyrasmussen.hw8_group34;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -176,6 +178,16 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
     public void searchCityListener(View v) {
 
+        EditText searchCityET = (EditText) findViewById(R.id.cityMain);
+        EditText searchCountryET = (EditText) findViewById(R.id.cityMain);
+
+        String searchCity = searchCityET.getText().toString();
+        String searchCountry = searchCountryET.getText().toString();
+
+        Intent intent = new Intent(this, CityWeatherActivity.class);
+        intent.putExtra("country", searchCountry);
+        intent.putExtra("city", searchCity);
+        startActivity(intent);
 
     }
 
@@ -526,9 +538,7 @@ public void prefListener(){
         }
     });
 
-
 }
-
 
     @Override
     protected void onResume() {

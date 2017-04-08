@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ShareActionProvider;
+import android.widget.Toast;
 
 /**
  * Created by joyrasmussen on 4/7/17.
@@ -58,6 +59,8 @@ public class CurrentCityPreference extends DialogPreference implements DialogInt
 
             pref.edit().putString("currentCity", newCity).apply();
             pref.edit().putString("currentCountry", newCountry).apply();
+
+
 
         }else if(which == DialogInterface.BUTTON_NEGATIVE){
             // do your stuff to handle negative button
