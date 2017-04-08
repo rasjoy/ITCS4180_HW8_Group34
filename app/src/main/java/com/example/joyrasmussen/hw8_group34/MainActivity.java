@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
     ImageView currentWeatherImage;
 
     SharedPreferences sharedPreferences;
-    private Object DialogFragment;
+    LinearLayoutManager mLayoutManager;
 
 
     @Override
@@ -85,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         SavedCity charlotte = new SavedCity("349818", "Charlotte", "US", false);
         savedCityReference.child("349818").setValue(charlotte);
         savedCityReference.child("121212").setValue(new SavedCity("349818", "Charlotte", "US", true));
-
 
 
         savedRecyclerView = (RecyclerView) findViewById(R.id.savedCityRecycler);
@@ -127,8 +127,12 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
             }
         };
+        mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+
         savedRecyclerView.setHasFixedSize(false);
-        savedRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        savedRecyclerView.setLayoutManager(mLayoutManager);
         savedRecyclerView.setAdapter(mAdapter);
 
 
