@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +56,14 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
     static String current_country = "currentCountry";
     static String current_city_key = "";
 
+    TextView currentCity;
+    TextView currentWeather;
+    TextView currentTemp;
+    TextView currentTempTV;
+    TextView currentUpdatedTV;
+    TextView currentUpdatedLast;
+    ImageView currentWeatherImage;
+
     SharedPreferences sharedPreferences;
     private Object DialogFragment;
 
@@ -63,6 +72,14 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        currentCity = (TextView) findViewById(R.id.currentCityName);
+        currentWeather = (TextView) findViewById(R.id.currentWeather);
+        currentTemp = (TextView) findViewById(R.id.currentTemp);
+        currentTempTV = (TextView) findViewById(R.id.currentTempTV);
+        currentUpdatedTV = (TextView) findViewById(R.id.currentUpdatedTV);
+        currentUpdatedLast = (TextView) findViewById(R.id.currentUpdatedLast);
+        currentWeatherImage = (ImageView) findViewById(R.id.currentWeatherImage);
 
 
         SavedCity charlotte = new SavedCity("349818", "Charlotte", "US", false);
@@ -124,17 +141,14 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
         if(!current_city.equals("") && !current_country.equals("")){
 
-            //Hide button & textview
-            Button setCurrentCityButton = (Button) findViewById(R.id.setCurrentButton);
-            TextView citynotSetTextView = (TextView) findViewById(R.id.noCurrent);
-            citynotSetTextView.setVisibility(View.GONE);
-            setCurrentCityButton.setVisibility(View.GONE);
-
+            //Hide button & textview, show weather widgets
+            alternateDisplay();
             //display weather widgets
         }
 
 
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -198,9 +212,23 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         sharedPreferences.edit().putString("currentCity", city).apply();
         sharedPreferences.edit().putString("currentCountry", country).apply();
 
-
         Toast.makeText(this, "Current city details saved", Toast.LENGTH_SHORT).show();
+    }
 
+    public void alternateDisplay(){
+
+        Button setCurrentCityButton = (Button) findViewById(R.id.setCurrentButton);
+        TextView citynotSetTextView = (TextView) findViewById(R.id.noCurrent);
+        citynotSetTextView.setVisibility(View.GONE);
+        setCurrentCityButton.setVisibility(View.GONE);
+
+        currentCity.setVisibility(View.VISIBLE);
+        currentTemp.setVisibility(View.VISIBLE);
+        currentTempTV.setVisibility(View.VISIBLE);
+        currentUpdatedLast.setVisibility(View.VISIBLE);
+        currentUpdatedTV.setVisibility(View.VISIBLE);
+        currentWeather.setVisibility(View.VISIBLE);
+        currentWeatherImage.setVisibility(View.VISIBLE);
 
     }
 }
