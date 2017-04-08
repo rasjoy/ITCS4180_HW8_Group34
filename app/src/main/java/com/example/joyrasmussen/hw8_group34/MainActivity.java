@@ -541,6 +541,14 @@ public void prefListener(){
         if(key.equals("temp_unit")){
 
         }
+
+        if(key.equals("currentCity") || key.equals("currentCountry")){
+            current_city = sharedPreferences.getString("currentCity", "");
+            current_country = sharedPreferences.getString("currentCountry", "");
+
+            Log.i("change", "here");
+            getCityCode(current_city, current_country);
+        }
     }
 }
 
