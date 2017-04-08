@@ -43,10 +43,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import org.json.JSONException;
+import org.ocpsoft.prettytime.PrettyTime;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import okhttp3.Call;
@@ -78,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
     static final String CURRENT_CITY = "currCity";
     static final String CURRENT_COUNTRY = "currentCountry";
     static final String CHILD_SAVED = "savedCity";
+
+    PrettyTime prettyTime;
 
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     FirebaseRecyclerAdapter<SavedCity, RecycViewHolder> mAdapter;
@@ -120,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         SavedCity charlotte = new SavedCity("349818", "Charlotte", "US", true);
         savedCityReference.child("349818").setValue(charlotte);
 
+        prettyTime = new PrettyTime();
 
         savedRecyclerView = (RecyclerView) findViewById(R.id.savedCityRecycler);
 
@@ -404,18 +409,24 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
             }
         });
 
-        Button setCurrentCityButton = (Button) findViewById(R.id.setCurrentButton);
-        TextView citynotSetTextView = (TextView) findViewById(R.id.noCurrent);
-        citynotSetTextView.setVisibility(View.GONE);
-        setCurrentCityButton.setVisibility(View.GONE);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Button setCurrentCityButton = (Button) findViewById(R.id.setCurrentButton);
+                TextView citynotSetTextView = (TextView) findViewById(R.id.noCurrent);
+                citynotSetTextView.setVisibility(View.GONE);
+                setCurrentCityButton.setVisibility(View.GONE);
 
-        currentCity.setVisibility(View.VISIBLE);
-        currentTemp.setVisibility(View.VISIBLE);
-        currentTempTV.setVisibility(View.VISIBLE);
-        currentUpdatedLast.setVisibility(View.VISIBLE);
-        currentUpdatedTV.setVisibility(View.VISIBLE);
-        currentWeather.setVisibility(View.VISIBLE);
-        currentWeatherImage.setVisibility(View.VISIBLE);
+                currentCity.setVisibility(View.VISIBLE);
+                currentTemp.setVisibility(View.VISIBLE);
+                currentTempTV.setVisibility(View.VISIBLE);
+                currentUpdatedLast.setVisibility(View.VISIBLE);
+                currentUpdatedTV.setVisibility(View.VISIBLE);
+                currentWeather.setVisibility(View.VISIBLE);
+                currentWeatherImage.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
 
     public void updateUI(String icon, String fahrenheit, final String time, final String weather, final String celcius) {
@@ -435,7 +446,9 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
                 currentCity.setText(current_city);
                 currentTemp.setText(celcius + "°C");
                 currentWeather.setText(weather);
-                currentUpdatedLast.setText(time);
+
+                Date date = new Date(Long.parseLong(time));
+                currentUpdatedLast.setText(prettyTime.format(date));
 
                 Picasso.Builder builder = new Picasso.Builder(MainActivity.this);
                 builder.listener(new Picasso.Listener()
