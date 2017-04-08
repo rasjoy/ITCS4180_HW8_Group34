@@ -6,4 +6,85 @@
     android:layout_height="match_parent"
     tools:context="com.example.joyrasmussen.hw8_group34.CityWeatherActivity">
 
+    <TextView
+        android:id="@+id/dailyForcastTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="@string/dailyForcast"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/headlines"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/headlines"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_below="@+id/dailyForcastTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/forcastHeadlines"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/headlines"
+        android:layout_alignStart="@+id/headlines"
+        android:layout_below="@+id/headlines"
+        android:layout_marginTop="5dp"
+        android:text="TextView"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/forcastOnTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/forcastHeadlines"
+        android:layout_alignStart="@+id/forcastHeadlines"
+        android:layout_below="@+id/forcastHeadlines"
+        android:layout_marginTop="10dp"
+        android:text="@string/forcastOn"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/forcastTemperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/forcastOnTextView"
+        android:layout_alignStart="@+id/forcastOnTextView"
+        android:layout_below="@+id/forcastOnTextView"
+        android:layout_marginTop="5dp"
+        android:text="TextView"
+        android:textColor="@android:color/black" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/forcastTemperature"
+        android:id="@+id/relativeLayout">
+
+        <LinearLayout
+            android:id="@+id/dayLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"></LinearLayout>
+
+        <TextView
+            android:id="@+id/conditionsView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/condit"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
 </RelativeLayout>

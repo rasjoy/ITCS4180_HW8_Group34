@@ -409,11 +409,16 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
             }
         });
 
+
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 Button setCurrentCityButton = (Button) findViewById(R.id.setCurrentButton);
                 TextView citynotSetTextView = (TextView) findViewById(R.id.noCurrent);
+
+
                 citynotSetTextView.setVisibility(View.GONE);
                 setCurrentCityButton.setVisibility(View.GONE);
 
@@ -424,8 +429,10 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
                 currentUpdatedTV.setVisibility(View.VISIBLE);
                 currentWeather.setVisibility(View.VISIBLE);
                 currentWeatherImage.setVisibility(View.VISIBLE);
+
             }
         });
+
 
     }
 
