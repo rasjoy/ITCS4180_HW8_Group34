@@ -27,6 +27,7 @@ public class CurrentWeatherParser {
         map.put("Fari", Integer.toString(temp.getJSONObject("Imperial").getInt("Value")));
         map.put("Time", Long.toString(stuff.getLong("EpochTime")));
         map.put("WeatherIcon", Integer.toString(stuff.getInt("WeatherIcon")));
+        map.put("WeatherText", stuff.getString("WeatherText"));
         return  map;
 
     }

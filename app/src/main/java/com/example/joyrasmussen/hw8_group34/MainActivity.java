@@ -244,7 +244,9 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
         getCityCode(city, country);
 
+
     }
+
 
     public void getCityCode(String city, String countryCode) {
 
@@ -443,3 +445,5 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
 
 }
+
+
