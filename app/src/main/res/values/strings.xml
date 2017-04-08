@@ -41,4 +41,5 @@
     <string name="forcastOn">Forcast On</string>
     <string name="condit">Conditions</string>
     <string name="day">Day</string>
+    <string name="night">Night</string>
 </resources>

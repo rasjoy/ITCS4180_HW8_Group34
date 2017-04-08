@@ -62,19 +62,70 @@
         android:text="TextView"
         android:textColor="@android:color/black" />
 
-    <RelativeLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewForcast"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/extendedForast"
+        android:layout_below="@+id/moreDetailsView" />
+
+    <TextView
+        android:id="@+id/moreDetailsView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/relativeLayout"
+        android:gravity="center_horizontal"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/extendedForast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="center_horizontal"
+        android:text="TextView" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/forcastTemperature"
-        android:id="@+id/relativeLayout">
+        android:layout_below="@+id/forcastTemperature">
 
         <LinearLayout
             android:id="@+id/dayLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"></LinearLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/conditionsView"
+            android:layout_toLeftOf="@+id/conditionsView"
+            android:layout_toStartOf="@+id/conditionsView"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/dayView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/day" />
+
+            <ImageView
+                android:id="@+id/dayImage"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_gravity="center_horizontal"
+                app:srcCompat="@mipmap/ic_launcher" />
+
+            <TextView
+                android:id="@+id/dayConditions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="TextView" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/conditionsView"
@@ -84,6 +135,39 @@
             android:text="@string/condit"
             android:textColor="@android:color/black"
             android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/nightLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/conditionsView"
+            android:layout_toEndOf="@+id/conditionsView"
+            android:layout_toRightOf="@+id/conditionsView"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/nightView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/night" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_gravity="center_horizontal"
+                app:srcCompat="@mipmap/ic_launcher" />
+
+            <TextView
+                android:id="@+id/nightConditions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="TextView" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
