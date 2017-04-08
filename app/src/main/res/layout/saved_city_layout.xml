@@ -10,12 +10,12 @@
     <ImageButton
         android:id="@+id/savedButtonsavedMain"
         android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        app:srcCompat="@drawable/star_gray"
-        android:layout_alignParentBottom="true" />
+        app:srcCompat="@drawable/star_gray" />
 
     <TextView
         android:id="@+id/savedCityNameMain"

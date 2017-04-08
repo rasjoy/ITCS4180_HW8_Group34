@@ -15,6 +15,13 @@ public class SavedCity {
         this.isFav = isFav;
     }
 
+    public SavedCity(String _id, String country, boolean isFav,  String name ) {
+        this._id = _id;
+        this.name = name;
+        this.country = country;
+        this.isFav = isFav;
+    }
+
     public String get_id() {
         return _id;
     }
@@ -45,5 +52,14 @@ public class SavedCity {
 
     public void setFav(boolean fav) {
         isFav = fav;
+    }
+
+    public SavedCity() {
+    }
+
+    public String displayName(){
+        return name + ", " + country;
+
+
     }
 }

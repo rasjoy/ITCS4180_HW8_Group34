@@ -28,14 +28,14 @@ public class RecycViewHolder extends RecyclerView.ViewHolder{
 
     public RecycViewHolder(View itemView) {
         super(itemView);
-        city = (TextView) itemView.findViewById(R.id.savedCitiesTextMain);
+        city = (TextView) itemView.findViewById(R.id.savedCityNameMain);
         temperature = (TextView) itemView.findViewById(R.id.tempMainSave);
         update = (TextView) itemView.findViewById(R.id.updateMainSave);
         favorite = (ImageButton) itemView.findViewById(R.id.savedButtonsavedMain);
 
     }
-    public void setCityName(String text){
-        city.setText(text);
+    public void setCityName(String name){
+        city.setText(name);
 
     }
     public void setTemp(String text, String units){
@@ -67,6 +67,7 @@ public class RecycViewHolder extends RecyclerView.ViewHolder{
         PrettyTime p = new PrettyTime(locale);
         return p.format(entered);
     }
+
 
 
 }
