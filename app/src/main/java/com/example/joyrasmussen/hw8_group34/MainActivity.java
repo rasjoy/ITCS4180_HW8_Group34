@@ -64,7 +64,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity implements EditCityDialogFragment.NoticeDialogListener {
+public class MainActivity extends AppCompatActivity implements EditCityDialogFragment.NoticeDialogListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     static final String API_Key = "zzAnkMX16zZhnHzpY2LvaJFp69R7JDM4";
     static final String Location_API = "http://dataservice.accuweather.com/locations/v1/" +
@@ -126,52 +126,6 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
         prettyTime = new PrettyTime();
 
-        savedRecyclerView = (RecyclerView) findViewById(R.id.savedCityRecycler);
-
-        mAdapter = new FirebaseRecyclerAdapter<SavedCity, RecycViewHolder>(SavedCity.class, R.layout.saved_city_layout, RecycViewHolder.class, query) {
-
-            @Override
-            protected void populateViewHolder(RecycViewHolder viewHolder, final SavedCity model, final int position) {
-
-                DatabaseReference savedRef = getRef(position);
-                String key = savedRef.getKey();
-                Log.d("populateViewHolder: ", model.get_id() + "getKey " + key + "name " + model.getName());
-                viewHolder.setCityName(model.getName() + ", " + model.getCountry());
-                viewHolder.setFavorite(model.isFav());
-
-                String unit = getSharedPreferences(MainActivity.PREFERENCES, Context.MODE_PRIVATE).getString("temp_unit", "c");
-                viewHolder.setTemp("temp", unit);
-                try {
-                    viewHolder.setUpdate("1491606900");
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                viewHolder.favorite.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (model.isFav()) {
-                            model.setFav(false);
-                        } else {
-                            model.setFav(true);
-                        }
-                        savedCityReference.child(model.get_id()).setValue(model);
-                    }
-                });
-            }
-
-            @Override
-            protected void onDataChanged() {
-                super.onDataChanged();
-
-            }
-        };
-        mLayoutManager = new LinearLayoutManager(this);
-        mLayoutManager.setReverseLayout(true);
-        mLayoutManager.setStackFromEnd(true);
-
-        savedRecyclerView.setHasFixedSize(false);
-        savedRecyclerView.setLayoutManager(mLayoutManager);
-        savedRecyclerView.setAdapter(mAdapter);
 
 
         //Check if current city/country is set in shared preferences
@@ -575,5 +529,19 @@ public void prefListener(){
 
 
 }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals("temp_unit")){
+
+        }
+    }
 }
 
