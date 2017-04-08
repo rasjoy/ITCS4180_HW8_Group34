@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
         SavedCity charlotte = new SavedCity("349818", "Charlotte", "US", false);
         savedCityReference.child("349818").setValue(charlotte);
-        //savedCityReference.child("121212").setValue(new SavedCity("349818", "Charlotte", "US", true));
 
 
         savedRecyclerView = (RecyclerView) findViewById(R.id.savedCityRecycler);
