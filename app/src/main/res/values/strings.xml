@@ -42,4 +42,5 @@
     <string name="condit">Conditions</string>
     <string name="day">Day</string>
     <string name="night">Night</string>
+    <string name="loadingData">Loading Data</string>
 </resources>

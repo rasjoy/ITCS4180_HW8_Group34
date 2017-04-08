@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         prettyTime = new PrettyTime();
 
 
-    populateRecyclerView();
+         populateRecyclerView();
         //Check if current city/country is set in shared preferences
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -136,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         current_city_key = sharedPreferences.getString("currentCityKey", "");
 
         if (!current_city.equals("") && !current_country.equals("")) {
-            populateRecyclerView();
             prefListener();
 
 
@@ -539,6 +538,7 @@ public void prefListener(){
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.equals("temp_unit")){
+            populateRecyclerView();
 
         }
     }
