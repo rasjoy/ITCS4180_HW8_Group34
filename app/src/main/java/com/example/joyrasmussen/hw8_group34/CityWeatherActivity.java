@@ -14,6 +14,7 @@ public class CityWeatherActivity extends AppCompatActivity {
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     DatabaseReference savedCityReference = mDatabase.child(MainActivity.CHILD_SAVED);
     SavedCity city;
+    String mobileLink;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,5 +46,10 @@ public class CityWeatherActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void getMobileLink(String ml){
+        mobileLink = ml;
+
     }
 }
