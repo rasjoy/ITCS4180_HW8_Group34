@@ -12,6 +12,12 @@
     <string name="defaultCity">Charlotte, NC</string>
     <string name="defaulttemp">Temperature: 85.95 ° F</string>
     <string name="defaultTime">Last updated: x min ago</string>
+    <string name="enterYourCity">Enter your city:</string>
+    <string name="enterYourCountry">Enter your country:</string>
+    <string name="save">Save</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="temp_unit">temp_unit</string>
     <string name="temperature_unit">Temperature Unit</string>
     <string name="choose_unit_summary">Choose between Celsius and Fahrenheit</string>

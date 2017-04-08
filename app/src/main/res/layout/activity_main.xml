@@ -30,7 +30,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_marginTop="19dp"
-            android:onClick="setCurrentCityListenter"
+            android:onClick="setCurrentCityListener"
             android:text="@string/setButton" />
     </RelativeLayout>
 
