@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -60,6 +61,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     ImageView dayImage, nightImage;
     TextView dayCondition, nightCondition;
     RecyclerView recyclerView;
+    ForcastAdapater adapter;
 
     PrettyTime prettyTime;
 
@@ -94,6 +96,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         mobileLink = "";
         detailUrl = "";
         listeners();
+        setAdapter();
 
     }
 
@@ -220,6 +223,9 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
                 Parse5Day parser = new Parse5Day();
 
                 try {
+                    forecasts = parser.parseInput(body);
+                    adapter.notifyDataSetChanged();
+
                     parser.parseInput(body);
                     headline = parser.getHeadline();
                     showEverything();
@@ -256,6 +262,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
 
 
+
             }
         });
 
@@ -287,4 +294,20 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     public void detailUpdate(View v) {
         //OneDayForecast forecast =
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+       if(!forecasts.isEmpty()) {adapter.notifyDataSetChanged();}
+    }
+
+    public void setAdapter(){
+        adapter = new ForcastAdapater(this, this, forecasts);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        recyclerView.setAdapter(adapter);
+
+
+    }
+
+
 }
