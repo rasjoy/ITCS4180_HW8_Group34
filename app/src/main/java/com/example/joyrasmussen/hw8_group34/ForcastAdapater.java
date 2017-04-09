@@ -13,6 +13,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,11 +45,22 @@ public class ForcastAdapater extends RecyclerView.Adapter<ForcastAdapater.Forcas
     public void onBindViewHolder(ForcastHolder holder, int position) {
         OneDayForecast forecast = data.get(position);
         String imageID = forecast.getDayPicture();
-        if(!imageID.isEmpty()) {
+        if(!imageID.isEmpty() || imageID != null) {
             imageID = imageID.length() == 1 ? "0" + imageID : imageID;
             Picasso.with(mContext).load(MainActivity.ICON.replace("{Image_ID}", imageID)).into(holder.image);
         }
-        holder.date.setText(forecast.getDate());
+        //2017-04-08T07:00:00-04:0
+        SimpleDateFormat formater =new SimpleDateFormat("yyyy-mm-dd");
+        SimpleDateFormat newFormater = new SimpleDateFormat("dd, mmm'yy");
+
+
+        String date = null;
+        try {
+            date = newFormater.format(formater.parse(forecast.getDate().substring(0,9)));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        holder.date.setText(date);
 
     }
 
