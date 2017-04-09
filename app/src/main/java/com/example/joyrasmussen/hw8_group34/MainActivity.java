@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -68,7 +70,7 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements EditCityDialogFragment.NoticeDialogListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
-    static final String API_Key = "zzAnkMX16zZhnHzpY2LvaJFp69R7JDM4";
+    static final String API_Key = "AiB6yixpjgqDzpih7MU5zMMYLXZjWwVZ";
     static final String Location_API = "http://dataservice.accuweather.com/locations/v1/" +
             "{COUNTRY_CODE}/search?apikey={YOUR_API_KEY}&q={CITY_NAME}";
     static final String CURRENT_FORCAST = "http://dataservice.accuweather.com/" +
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
     static String current_country = "currentCountry";
     static String current_city_key = "";
-    String currentWeatherIcon;
+    String currentWeatherIcon, celcius, fahrenheit;
 
     TextView currentCity;
     TextView currentWeather;
@@ -394,10 +396,11 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
     }
 
-    public void updateUI(String icon, String fahrenheit, final String time, final String weather, final String celcius) {
+    public void updateUI(String icon, final String fahrenheit, final String time, final String weather, final String celcius) {
 
         String imageURL = ICON;
-
+        this.fahrenheit = fahrenheit;
+        this.celcius = celcius;
         if (currentWeatherIcon.length() == 1) {
             currentWeatherIcon = "0" + currentWeatherIcon;
         }
@@ -409,7 +412,12 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
             public void run() {
 
                 currentCity.setText(current_city);
-                currentTemp.setText(celcius + "°C");
+                String unit = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("temp_unit", "");
+               if(unit.equals("c")) {
+                   currentTemp.setText(celcius + "°C");
+               }else{
+                   currentTemp.setText(fahrenheit + "°F");
+               }
                 currentWeather.setText(weather);
 
                 Date date = new Date(Long.parseLong(time)*1000);
@@ -450,7 +458,10 @@ public void  populateRecyclerView(){
             final String key = savedRef.getKey();
 
             if(model != null){
-                savedCitiesTextMain.setVisibility(View.GONE);
+                savedCitiesTextMain.setText("Saved Cities");
+                savedCitiesTextMain.setTextColor(Color.BLACK);
+                savedCitiesTextMain.setGravity(Gravity.CENTER);
+
             }
             Log.d("populateViewHolder: ", model.get_id() + "getKey " + key + "name " + model.getName());
             viewHolder.setCityName(model.getName() + ", " + model.getCountry());
@@ -471,7 +482,7 @@ public void  populateRecyclerView(){
             if (unit.equals("c")) {
                 viewHolder.setTemp(model.getTemperature(), "C");
             }else{
-                viewHolder.setTemp(model.getTempFar(), "f");
+                viewHolder.setTemp(model.getTempFar(), "F");
 
             }
             try {
@@ -546,7 +557,7 @@ public void prefListener(){
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.equals("temp_unit")){
-            populateRecyclerView();
+          updateTemperatureUnits();
 
         }
 
@@ -557,6 +568,16 @@ public void prefListener(){
             Log.i("change", "here");
             getCityCode(current_city, current_country);
         }
+    }
+    public void updateTemperatureUnits(){
+        populateRecyclerView();
+        String unit = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("temp_unit", "");
+        if(unit.equals("c")) {
+            currentTemp.setText(celcius + "°C");
+        }else{
+            currentTemp.setText(fahrenheit + "°F");
+        }
+
     }
 }
 

@@ -1,6 +1,7 @@
 package com.example.joyrasmussen.hw8_group34;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -36,6 +37,7 @@ import org.json.JSONObject;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -46,7 +48,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class CityWeatherActivity extends AppCompatActivity implements ForcastAdapater.DetailUpdater{
+public class CityWeatherActivity extends AppCompatActivity implements ForcastAdapater.DetailUpdater, SharedPreferences.OnSharedPreferenceChangeListener{
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     DatabaseReference savedCityReference = mDatabase.child(MainActivity.CHILD_SAVED);
     SavedCity city;
@@ -56,7 +58,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     String cityName;
     String country;
     String headline;
-    String maxTemp, minTemp;
+
 
     RelativeLayout allStuff;
     LinearLayout loading;
@@ -67,10 +69,12 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     TextView dayCondition, nightCondition;
     RecyclerView recyclerView;
     ForcastAdapater adapter;
+    int currentDayDisplay;
 
     PrettyTime prettyTime;
 
     ArrayList<OneDayForecast> forecasts;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +85,8 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         cityName = getIntent().getStringExtra("city").trim();
 
         findID();
-
-        forecasts = new ArrayList<OneDayForecast>();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        forecasts = new ArrayList<>();
         prettyTime = new PrettyTime();
 
         allStuff = (RelativeLayout) findViewById(R.id.contentLayout);
@@ -100,6 +104,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewForcast);
         mobileLink = "";
         detailUrl = "";
+        currentDayDisplay = 0;
 
         listeners();
         setAdapter();
@@ -119,11 +124,16 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         switch (item.getItemId()) {
             case R.id.saveCity:
                 saveThisCity();
-                break;
+                return true;
             case R.id.setCurrent:
+
+                setCurrentCity();
                 break;
             case R.id.settingsCity:
-                break;
+                Intent intent = new Intent(this, PreferencesActivity.class);
+                startActivity(intent);
+                return true;
+
 
         }
 
@@ -181,7 +191,13 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
                     } else {
                         JSONObject obj = arr.getJSONObject(0);
                         id = obj.getString("Key");
-//                        showEverything();
+//
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+
+                            }});
+
                         Log.d("onResponse: ", id);
 
                         getForecast();
@@ -230,20 +246,17 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
                 try {
                     forecasts = parser.parseInput(body);
-
+                    headline = parser.getHeadline();
 
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
 
-                           setAdapter();
-
+                            setAdapter();
+                            showEverything(0);
                         }
                     });
 
-
-                    headline = parser.getHeadline();
-                    showEverything();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -254,40 +267,43 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         });
     }
 
-    public void showEverything(){
+    public void showEverything( int i){
+        currentDayDisplay = i;
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                loading.setVisibility(View.GONE);
-                allStuff.setVisibility(View.VISIBLE);
+        loading.setVisibility(View.GONE);
+        allStuff.setVisibility(View.VISIBLE);
 
-                forcastHeadline.setText(headline);
+        forcastHeadline.setText(headline);
 
-                OneDayForecast today = forecasts.get(0);
+        OneDayForecast today = forecasts.get(i);
 
-                String forecastToday = "Forecast on: " + new Date(Long.parseLong(today.getDate()));;
-                forcastOn.setText(forecastToday);
-                String temperatureString = "Temperature: " + today.getTempMax() + "°/" + today.getTempMin() + "°";
-                temperature.setText(temperatureString);
+        SimpleDateFormat formater = new SimpleDateFormat("MMMM dd, yyyy");
+        String forecastToday = "Forecast on: " + formater.format(new Date(Long.parseLong(today.getDate())*1000));
+        forcastOn.setText(forecastToday);
+        String units = "c".equals(sharedPreferences.getString("temp_unit", "")) ? "C": "F";
+        String high = "C".equals(units) ?
+                String.format( "%.0f", (today.getTempMax() -32 )/1.8) : String.format( "%.0f", today .getTempMax());
 
-                dayCondition.setText(today.getDayPhrase());
-                nightCondition.setText(today.getNightPhrase());
-
-
-
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
+        String low = "c".equals(units) ?
+                String.format( "%.0f", ( today.getTempMin() - 32 )/1.8) : String.format( "%.0f", today.getTempMin());
+        temperature.setText("Temperature: " + high + "°"+ units+ "/" + low + "°" + units);
 
 
-                       // Picasso.with(getApplicationContext()).load("http://i.imgur.com/DvpvklR.png").into(imageView);
-                    }
-                });
+        dayCondition.setText(today.getDayPhrase());
+        nightCondition.setText(today.getNightPhrase());
 
 
-            }
-        });
+
+
+        String imageID = today.getDayPicture();
+        imageID = imageID.length() == 1 ? "0" + imageID : imageID;
+        Picasso.with(CityWeatherActivity.this).load(MainActivity.ICON.replace("{Image_ID}", imageID)).into(dayImage);
+        String nightURL = today.getNightPicture();
+        nightURL = nightURL.length() == 1 ? "0" + nightURL: nightURL;
+        Picasso.with(CityWeatherActivity.this).load(MainActivity.ICON.replace("{Image_ID}", nightURL)).into(nightImage);
+
+
+        // Picasso.with(getApplicationContext()).load().into(dayImage);
 
 
     }
@@ -313,17 +329,13 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         });
     }
 
-   @Override
+    @Override
     public void detailUpdate(View v) {
         int position = recyclerView.getChildAdapterPosition(v);
         OneDayForecast detailFor = forecasts.get(position);
         detailUrl = detailFor.getDetailURL();
+        showEverything(position);
 
-       String high = "c".equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("temp_unit", "")) ?
-               String.format( "%.2f", 32 + ( 1.8 * detailFor.getTempMax())) : String.format( "%.2f", detailFor.getTempMax());
-       String low = "c".equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("temp_unit", "")) ?
-               String.format( "%.2f", 32 + ( 1.8 * detailFor.getTempMin())) : String.format( "%.2f", detailFor.getTempMin());
-      temperature.setText("Temperature: " + high + "°/" + low + "°");
 
 
 
@@ -331,9 +343,11 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     @Override
     protected void onResume() {
         super.onResume();
-       if(!forecasts.isEmpty()) {
-           adapter.notifyDataSetChanged();
-       }
+        if(!forecasts.isEmpty()) {
+            adapter.notifyDataSetChanged();
+        }
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
     }
 
     public void setAdapter(){
@@ -353,7 +367,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         savedCityReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                city = new SavedCity(id, cityName, country, false,  String.format( "%.2f", 32 + ( 1.8 * forecasts.get(0).getTempMax())), Float.toString(forecasts.get(0).getTempMax()));
+                city = new SavedCity(id, cityName, country, false, String.format( "%.0f", (forecasts.get(0).getTempMax()- 32 )/1.8), String.format("%.0f",forecasts.get(0).getTempMax()));
                 if(dataSnapshot.child(id).getValue() == null) {
                     savedCityReference.child(id).setValue(city);
                     Toast.makeText(CityWeatherActivity.this, cityName + ", " + country + "was added to saved cities.", Toast.LENGTH_SHORT).show();
@@ -368,6 +382,34 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
             }
         });
+
+    }
+
+    public void setCurrentCity(){
+        //set this as the current city;
+        if(sharedPreferences.getString("currentCityKey", "").isEmpty() ){
+            Toast.makeText(CityWeatherActivity.this, "Current City Saved.", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(CityWeatherActivity.this, "Current City Updated.", Toast.LENGTH_LONG).show();
+        }
+        sharedPreferences.edit().putString("currentCityKey", id).apply();
+
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals("temp_unit")){
+            String units = "c".equals(sharedPreferences.getString("temp_unit", "")) ? "C": "F";
+            float max = forecasts.get(currentDayDisplay).getTempMax();
+            float low = forecasts.get(currentDayDisplay).getTempMin();
+            String high = "C".equals(units) ?
+                    String.format( "%.0f", ( max -32 )/1.8) : String.format( "%.0f", max);
+
+            String lower = "C".equals(units) ?
+                    String.format( "%.0f", ( low - 32 )/1.8) : String.format( "%.0f", low);
+            temperature.setText("Temperature: " + high + "°"+ units+ "/" + lower + "°"+units);
+        }
+
 
     }
 }

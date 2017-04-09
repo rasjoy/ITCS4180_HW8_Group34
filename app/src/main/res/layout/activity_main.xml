@@ -38,59 +38,71 @@
 
         <ImageView
             android:id="@+id/currentWeatherImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_below="@+id/currentWeather"
             android:layout_centerHorizontal="true"
             android:visibility="gone"
             app:srcCompat="@mipmap/ic_launcher" />
 
-        <TextView
-            android:id="@+id/currentTempTV"
+        <LinearLayout
+            android:id="@+id/tempholder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/currentWeatherImage"
-            android:layout_alignRight="@+id/currentWeatherImage"
             android:layout_below="@+id/currentWeatherImage"
-            android:layout_marginEnd="21dp"
-            android:layout_marginRight="21dp"
-            android:text="@string/temperature"
-            android:textSize="16sp"
-            android:visibility="gone" />
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/currentTemp"
+            <TextView
+                android:id="@+id/currentTempTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:text="@string/temperature"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/currentTemp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginStart="0dp"
+                android:layout_weight="1"
+                android:text="99 C"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/holderUpdate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/currentTempTV"
-            android:layout_alignLeft="@+id/currentWeatherImage"
-            android:layout_alignStart="@+id/currentWeatherImage"
-            android:layout_marginLeft="32dp"
-            android:layout_marginStart="32dp"
-            android:text="99 C"
-            android:visibility="gone" />
+            android:layout_alignStart="@+id/tempholder"
+            android:layout_below="@+id/tempholder"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/currentUpdatedTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/currentTempTV"
-            android:layout_alignStart="@+id/currentTempTV"
-            android:layout_below="@+id/currentTempTV"
-            android:text="@string/updated"
-            android:textSize="16sp"
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/currentUpdatedTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/updated"
+                android:textSize="16sp"
+                android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/currentUpdatedLast"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/currentUpdatedTV"
-            android:layout_toEndOf="@+id/currentUpdatedTV"
-            android:layout_toRightOf="@+id/currentUpdatedTV"
-            android:text="xx mins ago"
-            android:textSize="16sp"
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/currentUpdatedLast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_weight="1"
+                android:text="xx mins ago"
+                android:textSize="16sp"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/noCurrent"

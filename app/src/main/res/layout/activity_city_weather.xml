@@ -79,8 +79,8 @@
 
                 <ImageView
                     android:id="@+id/dayImage"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_gravity="center_horizontal"
                     app:srcCompat="@mipmap/ic_launcher" />
 
@@ -120,8 +120,8 @@
 
                 <ImageView
                     android:id="@+id/imageView2"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_gravity="center_horizontal"
                     app:srcCompat="@mipmap/ic_launcher" />
 
