@@ -209,6 +209,6 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
     @Override
     public void detailUpdate(View v) {
-        OneDayForecast forecast =
+        //OneDayForecast forecast =
     }
 }
