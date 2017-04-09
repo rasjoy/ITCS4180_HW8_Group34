@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -57,6 +58,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     ImageView dayImage, nightImage;
     TextView dayCondition, nightCondition;
     RecyclerView recyclerView;
+    ForcastAdapater adapter;
 
     ArrayList<OneDayForecast> forecasts;
 
@@ -88,6 +90,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         mobileLink = "";
         detailUrl = "";
         listeners();
+        setAdapter();
 
     }
 
@@ -168,7 +171,6 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
                         id = obj.getString("Key");
                         showEverything();
                         Log.d("onResponse: ", id);
-
                         getForecast();
 
                     }
@@ -215,6 +217,8 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
                 try {
                     forecasts = parser.parseInput(body);
+                    adapter.notifyDataSetChanged();
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -232,6 +236,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
             public void run() {
                 loading.setVisibility(View.GONE);
                 allStuff.setVisibility(View.VISIBLE);
+
             }
         });
 
@@ -263,4 +268,20 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     public void detailUpdate(View v) {
         //OneDayForecast forecast =
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+       if(!forecasts.isEmpty()) {adapter.notifyDataSetChanged();}
+    }
+
+    public void setAdapter(){
+        adapter = new ForcastAdapater(this, this, forecasts);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        recyclerView.setAdapter(adapter);
+
+
+    }
+
+
 }

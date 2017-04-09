@@ -49,7 +49,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/extendedForast"
-            android:layout_below="@+id/moreDetailsView" />
+            android:layout_below="@+id/moreDetailsView"
+            android:orientation="horizontal" />
 
         <RelativeLayout
             android:id="@+id/relativeLayout"
