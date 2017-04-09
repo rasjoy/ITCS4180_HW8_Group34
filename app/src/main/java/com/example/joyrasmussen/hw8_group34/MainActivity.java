@@ -256,13 +256,33 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
                     JSONArray arr = new JSONArray(body);
                     JSONObject obj = arr.getJSONObject(0);
-                    current_city_key = obj.getString("Key");
 
+                    String returnedKey = obj.getString("Key");
+
+
+                    current_city_key = returnedKey;
                     sharedPreferences.edit().putString("currentCityKey", current_city_key).apply();
                     alternateDisplay(current_city_key);
 
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this, "Current city changed", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+
                 } catch (JSONException e) {
                     e.printStackTrace();
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this, "Invalid city choice", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+
                 }
 
             }
