@@ -268,8 +268,11 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
    @Override
     public void detailUpdate(View v) {
-       Log.d( "detailUpdate: ", "hellow");
-        //OneDayForecast forecast =
+        int position = recyclerView.getChildAdapterPosition(v);
+        OneDayForecast detailFor = forecasts.get(position);
+       
+
+
     }
 
     @Override
