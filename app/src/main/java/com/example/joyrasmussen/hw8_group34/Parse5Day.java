@@ -27,6 +27,7 @@ public class Parse5Day {
 
             String date = forecastObj.getString("EpochDate");
             String link = forecastObj.getString("Link");
+            String mobileLink = forecastObj.getString("MobileLink");
 
             JSONObject dayFore = forecastObj.getJSONObject("Day");
             String dayPhrase = dayFore.getString("IconPhrase");
@@ -44,7 +45,7 @@ public class Parse5Day {
             float maxTemp = Float.parseFloat(maxObj.getString("Value"));
 
             OneDayForecast forecast = new OneDayForecast(dayPicture, nightPicture, dayPhrase, nightPhrase,
-                    date, link, minTemp, maxTemp);
+                    date, link, minTemp, maxTemp, mobileLink);
 
             forecasts.add(forecast);
 

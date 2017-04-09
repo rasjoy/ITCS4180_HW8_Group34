@@ -6,11 +6,11 @@ package com.example.joyrasmussen.hw8_group34;
 
 
 public class OneDayForecast {
-    String dayPicture, nightPicture, dayPhrase, nightPhrase, date, detailURL;
+    String dayPicture, nightPicture, dayPhrase, nightPhrase, date, detailURL, mobileLink;
     float tempMin, tempMax;
 
 
-    public OneDayForecast(String dayPicture, String nightPicture, String dayPhrase, String nightPhrase, String date, String detailURL, float tempMin, float tempMax) {
+    public OneDayForecast(String dayPicture, String nightPicture, String dayPhrase, String nightPhrase, String date, String detailURL, float tempMin, float tempMax, String mobileLink) {
         this.dayPicture = dayPicture;
         this.nightPicture = nightPicture;
         this.dayPhrase = dayPhrase;
@@ -19,6 +19,7 @@ public class OneDayForecast {
         this.detailURL = detailURL;
         this.tempMin = tempMin;
         this.tempMax = tempMax;
+        this.mobileLink = mobileLink;
     }
 
     public String getDayPicture() {
