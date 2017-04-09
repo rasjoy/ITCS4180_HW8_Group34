@@ -79,7 +79,9 @@ public class CityWeatherActivity extends AppCompatActivity {
         forcastHeadline = (TextView) findViewById(R.id.forcastTemperature);
         extendedForast = (TextView) findViewById(R.id.extendedForast);
         detailLink = (TextView) findViewById(R.id.moreDetailsView);
-
+        mobileLink = "";
+        detailUrl = "";
+        listeners();
 
     }
 
@@ -158,6 +160,7 @@ public class CityWeatherActivity extends AppCompatActivity {
                     }else{
                         JSONObject obj = arr.getJSONObject(0);
                         id = obj.getString("Key");
+                        showEveryything();
                         Log.d( "onResponse: ", id);
 
                     }
