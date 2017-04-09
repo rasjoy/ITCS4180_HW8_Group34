@@ -6,177 +6,185 @@
     android:layout_height="match_parent"
     tools:context="com.example.joyrasmussen.hw8_group34.CityWeatherActivity">
 
-    <TextView
-        android:id="@+id/dailyForcastTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:text="@string/dailyForcast"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/headlines"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/headlines"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"
-        android:layout_below="@+id/dailyForcastTextView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/forcastHeadlines"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/headlines"
-        android:layout_alignStart="@+id/headlines"
-        android:layout_below="@+id/headlines"
-        android:layout_marginTop="5dp"
-        android:text="TextView"
-        android:textColor="@android:color/black" />
-
-    <TextView
-        android:id="@+id/forcastOnTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/forcastHeadlines"
-        android:layout_alignStart="@+id/forcastHeadlines"
-        android:layout_below="@+id/forcastHeadlines"
-        android:layout_marginTop="10dp"
-        android:text="@string/forcastOn"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/forcastTemperature"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/forcastOnTextView"
-        android:layout_alignStart="@+id/forcastOnTextView"
-        android:layout_below="@+id/forcastOnTextView"
-        android:layout_marginTop="5dp"
-        android:text="TextView"
-        android:textColor="@android:color/black" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewForcast"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/extendedForast"
-        android:layout_below="@+id/moreDetailsView" />
-
-    <TextView
-        android:id="@+id/moreDetailsView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_below="@+id/relativeLayout"
-        android:gravity="center_horizontal"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/extendedForast"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:gravity="center_horizontal"
-        android:text="TextView" />
-
     <RelativeLayout
-        android:id="@+id/relativeLayout"
+        android:id="@+id/contentLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/forcastTemperature">
-
-        <LinearLayout
-            android:id="@+id/dayLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/conditionsView"
-            android:layout_toLeftOf="@+id/conditionsView"
-            android:layout_toStartOf="@+id/conditionsView"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/dayView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/day" />
-
-            <ImageView
-                android:id="@+id/dayImage"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_gravity="center_horizontal"
-                app:srcCompat="@mipmap/ic_launcher" />
-
-            <TextView
-                android:id="@+id/dayConditions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="TextView" />
-        </LinearLayout>
+        android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/conditionsView"
+            android:id="@+id/forcastHeadlines"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="@string/condit"
+            android:layout_alignLeft="@+id/headlines"
+            android:layout_alignStart="@+id/headlines"
+            android:layout_below="@+id/headlines"
+            android:layout_marginTop="5dp"
+            android:text="TextView"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/extendedForast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="center_horizontal"
+            android:text="@string/extend"
+            android:textColor="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/forcastOnTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/forcastHeadlines"
+            android:layout_alignStart="@+id/forcastHeadlines"
+            android:layout_below="@+id/forcastHeadlines"
+            android:layout_marginTop="10dp"
+            android:text="@string/forcastOn"
             android:textColor="@android:color/black"
             android:textSize="18sp" />
 
-        <LinearLayout
-            android:id="@+id/nightLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/conditionsView"
-            android:layout_toEndOf="@+id/conditionsView"
-            android:layout_toRightOf="@+id/conditionsView"
-            android:orientation="vertical">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewForcast"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/extendedForast"
+            android:layout_below="@+id/moreDetailsView" />
 
-            <TextView
-                android:id="@+id/nightView"
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/forcastTemperature">
+
+            <LinearLayout
+                android:id="@+id/dayLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/night" />
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/conditionsView"
+                android:layout_toLeftOf="@+id/conditionsView"
+                android:layout_toStartOf="@+id/conditionsView"
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_gravity="center_horizontal"
-                app:srcCompat="@mipmap/ic_launcher" />
+                <TextView
+                    android:id="@+id/dayView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/day" />
+
+                <ImageView
+                    android:id="@+id/dayImage"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_gravity="center_horizontal"
+                    app:srcCompat="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:id="@+id/dayConditions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="TextView" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/nightConditions"
-                android:layout_width="match_parent"
+                android:id="@+id/conditionsView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="TextView" />
+                android:layout_centerHorizontal="true"
+                android:text="@string/condit"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/nightLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/conditionsView"
+                android:layout_toEndOf="@+id/conditionsView"
+                android:layout_toRightOf="@+id/conditionsView"
+                android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/nightView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/night" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_gravity="center_horizontal"
+                    app:srcCompat="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:id="@+id/nightConditions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="TextView" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/dailyForcastTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="@string/dailyForcast"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/headlines"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/dailyForcastTextView"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:text="@string/headlines"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/moreDetailsView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_below="@+id/relativeLayout"
+            android:gravity="center_horizontal"
+            android:text="@string/details"
+            android:textColor="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/forcastTemperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/forcastOnTextView"
+            android:layout_alignStart="@+id/forcastOnTextView"
+            android:layout_below="@+id/forcastOnTextView"
+            android:layout_marginTop="5dp"
+            android:text="TextView"
+            android:textColor="@android:color/black" />
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/loadingLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/forcastOnTextView"
         android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:gravity="center"
         android:orientation="horizontal">
 

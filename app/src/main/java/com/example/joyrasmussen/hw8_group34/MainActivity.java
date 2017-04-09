@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
     public void searchCityListener(View v) {
 
         EditText searchCityET = (EditText) findViewById(R.id.cityMain);
-        EditText searchCountryET = (EditText) findViewById(R.id.cityMain);
+        EditText searchCountryET = (EditText) findViewById(R.id.countryMain);
 
         String searchCity = searchCityET.getText().toString();
         String searchCountry = searchCountryET.getText().toString();
