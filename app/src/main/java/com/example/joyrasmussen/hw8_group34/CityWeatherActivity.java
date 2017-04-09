@@ -392,9 +392,13 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         //set this as the current city;
         if(sharedPreferences.getString("currentCityKey", "").isEmpty() ){
             Toast.makeText(CityWeatherActivity.this, "Current City Saved.", Toast.LENGTH_LONG).show();
+
+
         }else{
             Toast.makeText(CityWeatherActivity.this, "Current City Updated.", Toast.LENGTH_LONG).show();
         }
+        sharedPreferences.edit().putString("currentCity", cityName).apply();
+        sharedPreferences.edit().putString("currentCountry", country).apply();
         sharedPreferences.edit().putString("currentCityKey", id).apply();
 
     }
@@ -419,4 +423,5 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         forcastHeadline.setText(headline);
 
     }
+
 }
