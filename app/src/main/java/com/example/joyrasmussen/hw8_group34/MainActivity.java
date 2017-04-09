@@ -556,9 +556,9 @@ public void prefListener(){
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals("temp_unit")){
-          updateTemperatureUnits();
-
+        if (key.equals("temp_unit")) {
+            updateTemperatureUnits();
+            Toast.makeText(this, "Temperature unit changed", Toast.LENGTH_SHORT).show();
         }
 
         if(key.equals("currentCity") || key.equals("currentCountry")){

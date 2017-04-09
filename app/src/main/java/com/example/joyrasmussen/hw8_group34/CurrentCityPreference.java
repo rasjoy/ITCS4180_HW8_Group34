@@ -60,6 +60,8 @@ public class CurrentCityPreference extends DialogPreference implements DialogInt
             pref.edit().putString("currentCity", newCity).apply();
             pref.edit().putString("currentCountry", newCountry).apply();
 
+            Toast.makeText(getContext(), "Current city changed", Toast.LENGTH_SHORT).show();
+
 
 
         }else if(which == DialogInterface.BUTTON_NEGATIVE){
