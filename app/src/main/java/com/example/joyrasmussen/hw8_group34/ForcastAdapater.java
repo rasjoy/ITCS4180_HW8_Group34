@@ -25,15 +25,15 @@ import java.util.List;
  * Created by joyrasmussen on 4/8/17.
  */
 
-public class ForcastAdapater extends RecyclerView.Adapter<ForcastAdapater.ForcastHolder> {
+public class ForcastAdapater extends RecyclerView.Adapter<ForcastAdapater.ForcastHolder> implements View.OnClickListener{
     private Context mContext;
     private List<OneDayForecast> data;
     private SharedPreferences mPreference;
+    private DetailUpdater detail;
 
-
-
-    public ForcastAdapater(Context mContext, List<OneDayForecast> data) {
+    public ForcastAdapater(Context mContext, DetailUpdater detailUpdater,  List<OneDayForecast> data) {
         this.mContext = mContext;
+        this.detail = detailUpdater;
         this.data = data;
         this.mPreference = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
@@ -41,7 +41,7 @@ public class ForcastAdapater extends RecyclerView.Adapter<ForcastAdapater.Forcas
     @Override
     public ForcastHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.five_days_layout, parent, false);
-            return new ForcastHolder(view);
+        return new ForcastHolder(view);
     }
 
     @Override
@@ -69,7 +69,12 @@ public class ForcastAdapater extends RecyclerView.Adapter<ForcastAdapater.Forcas
 
     @Override
     public int getItemCount() {
-        return 0;
+        return data.size();
+    }
+
+    @Override
+    public void onClick(View v) {
+        detail.detailUpdate(v);
     }
 
     static class ForcastHolder extends RecycViewHolder{
@@ -83,5 +88,8 @@ public class ForcastAdapater extends RecyclerView.Adapter<ForcastAdapater.Forcas
             image = (ImageView) itemView.findViewById(R.id.imageRecycler);
 
         }
+    }
+    interface DetailUpdater{
+        void detailUpdate(View v);
     }
 }

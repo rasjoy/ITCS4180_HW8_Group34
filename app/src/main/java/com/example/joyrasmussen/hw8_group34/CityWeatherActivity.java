@@ -39,7 +39,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class CityWeatherActivity extends AppCompatActivity{
+public class CityWeatherActivity extends AppCompatActivity implements ForcastAdapater.DetailUpdater{
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     DatabaseReference savedCityReference = mDatabase.child(MainActivity.CHILD_SAVED);
     SavedCity city;
@@ -259,7 +259,7 @@ public class CityWeatherActivity extends AppCompatActivity{
         });
     }
 
-   // @Override
+   @Override
     public void detailUpdate(View v) {
         //OneDayForecast forecast =
     }
