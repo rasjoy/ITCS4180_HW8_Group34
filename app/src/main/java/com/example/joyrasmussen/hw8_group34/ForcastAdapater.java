@@ -60,7 +60,7 @@ public class ForcastAdapater extends RecyclerView.Adapter<ForcastAdapater.Forcas
             Picasso.with(mContext).load(MainActivity.ICON.replace("{Image_ID}", imageID)).into(holder.image);
         }
         //2017-04-08T07:00:00-04:0
-        SimpleDateFormat newFormater = new SimpleDateFormat("dd, mmm yy");
+        SimpleDateFormat newFormater = new SimpleDateFormat("dd, MMM yy");
 
         Date d = new java.util.Date(Long.parseLong(forecast.getDate()) * 1000);
         String  date = newFormater.format(d);
