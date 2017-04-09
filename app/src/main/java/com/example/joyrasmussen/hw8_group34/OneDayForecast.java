@@ -85,4 +85,19 @@ public class OneDayForecast {
     public void setTempMax(int tempMax) {
         this.tempMax = tempMax;
     }
+
+    @Override
+    public String toString() {
+        return "OneDayForecast{" +
+                "dayPicture='" + dayPicture + '\'' +
+                ", nightPicture='" + nightPicture + '\'' +
+                ", dayPhrase='" + dayPhrase + '\'' +
+                ", nightPhrase='" + nightPhrase + '\'' +
+                ", date='" + date + '\'' +
+                ", detailURL='" + detailURL + '\'' +
+                ", mobileLink='" + mobileLink + '\'' +
+                ", tempMin=" + tempMin +
+                ", tempMax=" + tempMax +
+                '}';
+    }
 }
