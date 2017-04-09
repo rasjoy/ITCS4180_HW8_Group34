@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -54,6 +55,7 @@ public class CityWeatherActivity extends AppCompatActivity {
     TextView temperature;
     ImageView dayImage, nightImage;
     TextView dayCondition, nightCondition;
+    RecyclerView recyclerView;
 
 
     @Override
@@ -160,7 +162,7 @@ public class CityWeatherActivity extends AppCompatActivity {
                     }else{
                         JSONObject obj = arr.getJSONObject(0);
                         id = obj.getString("Key");
-                        showEveryything();
+                        showEverything();
                         Log.d( "onResponse: ", id);
 
                     }
@@ -177,7 +179,7 @@ public class CityWeatherActivity extends AppCompatActivity {
 
     }
 
-    public void showEveryything(){
+    public void showEverything(){
         loading.setVisibility(View.GONE);
         allStuff.setVisibility(View.VISIBLE);
 
