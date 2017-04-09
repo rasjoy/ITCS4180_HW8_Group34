@@ -105,6 +105,5 @@ public class ForcastAdapater extends RecyclerView.Adapter<ForcastAdapater.Forcas
 
         return size.x;
 
-
     }
 }

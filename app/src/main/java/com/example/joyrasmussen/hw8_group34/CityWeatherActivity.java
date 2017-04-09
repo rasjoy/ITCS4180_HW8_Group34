@@ -23,8 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -53,6 +56,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     String cityName;
     String country;
     String headline;
+    String maxTemp, minTemp;
 
     RelativeLayout allStuff;
     LinearLayout loading;
@@ -96,6 +100,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewForcast);
         mobileLink = "";
         detailUrl = "";
+
         listeners();
         setAdapter();
 
@@ -113,7 +118,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.saveCity:
-
+                saveThisCity();
                 break;
             case R.id.setCurrent:
                 break;
@@ -227,10 +232,12 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
                     forecasts = parser.parseInput(body);
 
 
-                    runOnUiThread(new Runnable() {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            adapter.notifyDataSetChanged();
+
+                           setAdapter();
+
                         }
                     });
 
@@ -261,7 +268,6 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
                 String forecastToday = "Forecast on: " + new Date(Long.parseLong(today.getDate()));;
                 forcastOn.setText(forecastToday);
-
                 String temperatureString = "Temperature: " + today.getTempMax() + "°/" + today.getTempMin() + "°";
                 temperature.setText(temperatureString);
 
@@ -322,11 +328,12 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
 
     }
-
     @Override
     protected void onResume() {
         super.onResume();
-       if(!forecasts.isEmpty()) {adapter.notifyDataSetChanged();}
+       if(!forecasts.isEmpty()) {
+           adapter.notifyDataSetChanged();
+       }
     }
 
     public void setAdapter(){
@@ -342,5 +349,25 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
     }
 
+    public void saveThisCity(){
+        savedCityReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                city = new SavedCity(id, cityName, country, false,  String.format( "%.2f", 32 + ( 1.8 * forecasts.get(0).getTempMax())), Float.toString(forecasts.get(0).getTempMax()));
+                if(dataSnapshot.child(id).getValue() == null) {
+                    savedCityReference.child(id).setValue(city);
+                    Toast.makeText(CityWeatherActivity.this, cityName + ", " + country + "was added to saved cities.", Toast.LENGTH_SHORT).show();
+                }else{
+                    savedCityReference.child(id).setValue(city);
+                    Toast.makeText(CityWeatherActivity.this, "City Updated", Toast.LENGTH_SHORT).show();
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
 }

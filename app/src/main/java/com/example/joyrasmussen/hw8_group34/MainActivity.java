@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
     FirebaseRecyclerAdapter<SavedCity, RecycViewHolder> mAdapter;
     DatabaseReference savedCityReference = mDatabase.child(CHILD_SAVED);
     RecyclerView savedRecyclerView;
-    Query query = savedCityReference.orderByChild("isFav");
+    Query query = savedCityReference.orderByChild("fav");
 
     static String current_city = "currCity";
 
@@ -412,7 +412,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
                 currentTemp.setText(celcius + "°C");
                 currentWeather.setText(weather);
 
-                Date date = new Date(Long.parseLong(time));
+                Date date = new Date(Long.parseLong(time)*1000);
                 currentUpdatedLast.setText(prettyTime.format(date));
 
                 Picasso.Builder builder = new Picasso.Builder(MainActivity.this);

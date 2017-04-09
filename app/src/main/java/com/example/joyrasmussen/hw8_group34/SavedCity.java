@@ -9,7 +9,18 @@ public class SavedCity {
     boolean isFav;
     String temperature;
     String tempFar;
+    String time;
 
+
+    public SavedCity(String _id, String name, String country, boolean isFav, String temperature, String tempFar) {
+        this._id = _id;
+        this.name = name;
+        this.country = country;
+        this.isFav = isFav;
+        this.temperature = temperature;
+        this.tempFar = tempFar;
+        this.time =  "491672900";
+    }
     public SavedCity(String _id, String name, String country, boolean isFav, String temperature, String tempFar, String time) {
         this._id = _id;
         this.name = name;
@@ -20,27 +31,9 @@ public class SavedCity {
         this.time = time;
     }
 
-    public String getTempFar() {
 
-        return tempFar;
+    public SavedCity() {
     }
-
-    public void setTempFar(String tempFar) {
-        this.tempFar = tempFar;
-    }
-
-    String time;
-
-    public SavedCity(String _id, String name, String country, boolean isFav, String temperature, String time) {
-        this._id = _id;
-        this.name = name;
-        this.country = country;
-        this.isFav = isFav;
-        this.temperature = temperature;
-        this.time = time;
-        tempFar = "0";
-    }
-
     public SavedCity(String _id, String name, String country, boolean isFav) {
         this._id = _id;
         this.name = name;
@@ -50,6 +43,31 @@ public class SavedCity {
         tempFar = "0";
         time = "491672900";
     }
+
+    public SavedCity(String _id, String country, boolean isFav, String name ) {
+        this._id = _id;
+        this.name = name;
+        this.country = country;
+        this.isFav = isFav;
+        temperature = "0";
+        time = "491672900";
+        tempFar = "0";
+
+    }
+
+
+    public String getTempFar() {
+
+        return tempFar;
+    }
+
+    public void setTempFar(String tempFar) {
+        this.tempFar = tempFar;
+    }
+
+
+
+
 
     public String getTemperature() {
         return temperature;
@@ -67,16 +85,6 @@ public class SavedCity {
         this.time = time;
     }
 
-    public SavedCity(String _id, String country, boolean isFav, String name ) {
-        this._id = _id;
-        this.name = name;
-        this.country = country;
-        this.isFav = isFav;
-        temperature = "0";
-        time = "491672900";
-        tempFar = "0";
-
-    }
 
     public String get_id() {
         return _id;
@@ -110,8 +118,7 @@ public class SavedCity {
         isFav = fav;
     }
 
-    public SavedCity() {
-    }
+
 
     public String displayName(){
         return name + ", " + country;
