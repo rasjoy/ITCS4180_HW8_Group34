@@ -217,7 +217,9 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
                 try {
                     forecasts = parser.parseInput(body);
-                    adapter.notifyDataSetChanged();
+                    Log.d( "onResponse: ", forecasts.get(0).toString());
+                    setAdapter();
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -266,6 +268,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
    @Override
     public void detailUpdate(View v) {
+       Log.d( "detailUpdate: ", "hellow");
         //OneDayForecast forecast =
     }
 
@@ -276,10 +279,15 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     }
 
     public void setAdapter(){
-        adapter = new ForcastAdapater(this, this, forecasts);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        recyclerView.setAdapter(adapter);
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter = new ForcastAdapater(CityWeatherActivity.this, CityWeatherActivity.this, forecasts);
+                LinearLayoutManager manager = new LinearLayoutManager(CityWeatherActivity.this, LinearLayoutManager.HORIZONTAL, false);
+                recyclerView.setLayoutManager(manager);
+                recyclerView.setAdapter(adapter);
+            }
+        });
 
     }
 

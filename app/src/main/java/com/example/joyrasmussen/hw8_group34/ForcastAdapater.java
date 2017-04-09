@@ -2,12 +2,17 @@ package com.example.joyrasmussen.hw8_group34;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -26,7 +31,7 @@ import java.util.List;
  */
 
 public class ForcastAdapater extends RecyclerView.Adapter<ForcastAdapater.ForcastHolder> implements View.OnClickListener{
-    private Context mContext;
+    private static Context mContext;
     private List<OneDayForecast> data;
     private SharedPreferences mPreference;
     private DetailUpdater detail;
@@ -41,11 +46,13 @@ public class ForcastAdapater extends RecyclerView.Adapter<ForcastAdapater.Forcas
     @Override
     public ForcastHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.five_days_layout, parent, false);
+        view.setOnClickListener(this);
         return new ForcastHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ForcastHolder holder, int position) {
+        Log.d("onBindViewHolder: ", "binding");
         OneDayForecast forecast = data.get(position);
         String imageID = forecast.getDayPicture();
         if(!imageID.isEmpty() || imageID != null) {
@@ -53,16 +60,11 @@ public class ForcastAdapater extends RecyclerView.Adapter<ForcastAdapater.Forcas
             Picasso.with(mContext).load(MainActivity.ICON.replace("{Image_ID}", imageID)).into(holder.image);
         }
         //2017-04-08T07:00:00-04:0
-        SimpleDateFormat formater =new SimpleDateFormat("yyyy-mm-dd");
-        SimpleDateFormat newFormater = new SimpleDateFormat("dd, mmm'yy");
+        SimpleDateFormat newFormater = new SimpleDateFormat("dd, mmm yy");
 
+        Date d = new java.util.Date(Long.parseLong(forecast.getDate()) * 1000);
+        String  date = newFormater.format(d);
 
-        String date = null;
-        try {
-            date = newFormater.format(formater.parse(forecast.getDate().substring(0,9)));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         holder.date.setText(date);
 
     }
@@ -86,10 +88,23 @@ public class ForcastAdapater extends RecyclerView.Adapter<ForcastAdapater.Forcas
             super(itemView);
             date = (TextView) itemView.findViewById(R.id.dateRecyclerView) ;
             image = (ImageView) itemView.findViewById(R.id.imageRecycler);
+            LinearLayout root  = (LinearLayout) itemView.findViewById(R.id.dayLinearLayout);
+            root.getLayoutParams().width = getWidth()/3;
 
         }
     }
     interface DetailUpdater{
         void detailUpdate(View v);
+    }
+
+    public static int getWidth(){
+        WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        Display display = manager.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        return size.x;
+
+
     }
 }

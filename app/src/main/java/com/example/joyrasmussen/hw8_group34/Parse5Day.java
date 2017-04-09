@@ -50,6 +50,7 @@ public class Parse5Day {
                     date, link, minTemp, maxTemp, mobileLink);
 
             forecasts.add(forecast);
+            Log.d( "parseInput: ", forecast.getDayPhrase());
 
         }
 
