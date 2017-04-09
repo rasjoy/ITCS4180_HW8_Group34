@@ -1,5 +1,7 @@
 package com.example.joyrasmussen.hw8_group34;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,7 +57,9 @@ public class Parse5Day {
 
     }
 
+
     public String getHeadline() {
         return headline;
+
     }
 }

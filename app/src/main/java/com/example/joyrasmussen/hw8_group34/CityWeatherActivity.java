@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import okhttp3.Call;
@@ -38,7 +39,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class CityWeatherActivity extends AppCompatActivity implements ForcastAdapater.DetailUpdater{
+public class CityWeatherActivity extends AppCompatActivity{
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     DatabaseReference savedCityReference = mDatabase.child(MainActivity.CHILD_SAVED);
     SavedCity city;
@@ -57,6 +58,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     TextView dayCondition, nightCondition;
     RecyclerView recyclerView;
 
+    ArrayList<OneDayForecast> forecasts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
         findID();
 
+        forecasts = new ArrayList<OneDayForecast>();
 
         allStuff = (RelativeLayout) findViewById(R.id.contentLayout);
         allStuff.setVisibility(View.INVISIBLE);
@@ -98,7 +101,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.saveCity:
 
                 break;
@@ -112,12 +115,12 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         return super.onOptionsItemSelected(item);
     }
 
-    public void getMobileLink(String ml){
+    public void getMobileLink(String ml) {
         mobileLink = ml;
 
     }
 
-    public void findID(){
+    public void findID() {
 
         OkHttpClient client = new OkHttpClient();
 
@@ -151,8 +154,8 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
                     String body = response.body().string();
 
                     JSONArray arr = new JSONArray(body);
-                    Log.d( "onResponse: ", arr.toString());
-                    if(arr.length() == 0){
+                    Log.d("onResponse: ", arr.toString());
+                    if (arr.length() == 0) {
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
@@ -160,15 +163,15 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
                                 finish();
                             }
                         });
-                    }else{
+                    } else {
                         JSONObject obj = arr.getJSONObject(0);
                         id = obj.getString("Key");
                         showEverything();
-                        Log.d( "onResponse: ", id);
+                        Log.d("onResponse: ", id);
+
+                        getForecast();
 
                     }
-
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -180,13 +183,62 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
     }
 
-    public void showEverything(){
-        loading.setVisibility(View.GONE);
-        allStuff.setVisibility(View.VISIBLE);
+    public void getForecast() {
+
+        OkHttpClient client = new OkHttpClient();
+
+        String url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/349818?apikey=zzAnkMX16zZhnHzpY2LvaJFp69R7JDM4";
+        url = url.replace("349818", id);
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                Headers responseHeaders = response.headers();
+                for (int i = 0, size = responseHeaders.size(); i < size; i++) {
+                    System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                }
+
+                String body = response.body().string();
+
+                Parse5Day parser = new Parse5Day();
+
+                try {
+                    forecasts = parser.parseInput(body);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+        });
+    }
+
+    public void showEverything() {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loading.setVisibility(View.GONE);
+                allStuff.setVisibility(View.VISIBLE);
+            }
+        });
+
 
     }
 
-    public void listeners(){
+    public void listeners() {
         detailLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -207,7 +259,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         });
     }
 
-    @Override
+   // @Override
     public void detailUpdate(View v) {
         //OneDayForecast forecast =
     }
