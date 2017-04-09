@@ -270,7 +270,11 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     public void detailUpdate(View v) {
         int position = recyclerView.getChildAdapterPosition(v);
         OneDayForecast detailFor = forecasts.get(position);
-       
+        detailUrl = detailFor.getDetailURL();
+
+       String high = getSharedPreferences("temp_unit", "").equals("c").detailFor.getTempMax()
+       temperature.setText();
+
 
 
     }
