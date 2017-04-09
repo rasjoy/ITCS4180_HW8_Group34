@@ -2,6 +2,7 @@ package com.example.joyrasmussen.hw8_group34;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ocpsoft.prettytime.PrettyTime;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     String id;
     String cityName;
     String country;
+    String headline;
 
     RelativeLayout allStuff;
     LinearLayout loading;
@@ -57,6 +60,8 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     ImageView dayImage, nightImage;
     TextView dayCondition, nightCondition;
     RecyclerView recyclerView;
+
+    PrettyTime prettyTime;
 
     ArrayList<OneDayForecast> forecasts;
 
@@ -71,6 +76,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         findID();
 
         forecasts = new ArrayList<OneDayForecast>();
+        prettyTime = new PrettyTime();
 
         allStuff = (RelativeLayout) findViewById(R.id.contentLayout);
         allStuff.setVisibility(View.INVISIBLE);
@@ -214,24 +220,42 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
                 Parse5Day parser = new Parse5Day();
 
                 try {
-                    forecasts = parser.parseInput(body);
+                    parser.parseInput(body);
+                    headline = parser.getHeadline();
+                    showEverything();
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
 
             }
 
         });
     }
 
-    public void showEverything() {
+    public void showEverything(){
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 loading.setVisibility(View.GONE);
                 allStuff.setVisibility(View.VISIBLE);
+
+                forcastHeadline.setText(headline);
+
+                OneDayForecast today = forecasts.get(0);
+
+                String forecastToday = "Forecast on: " + new Date(Long.parseLong(today.getDate()));;
+                forcastOn.setText(forecastToday);
+
+                String temperatureString = "Temperature: " + today.getTempMax() + "°/" + today.getTempMin() + "°";
+                temperature.setText(temperatureString);
+
+                dayCondition.setText(today.getDayPhrase());
+                nightCondition.setText(today.getNightPhrase());
+
+
+
             }
         });
 
