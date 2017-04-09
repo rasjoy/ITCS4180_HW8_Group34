@@ -43,4 +43,6 @@
     <string name="day">Day</string>
     <string name="night">Night</string>
     <string name="loadingData">Loading Data</string>
+    <string name="extend">Click Here for extended forcast.</string>
+    <string name="details">Click here for more details</string>
 </resources>
