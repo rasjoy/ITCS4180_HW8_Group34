@@ -275,6 +275,8 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
                 } catch (JSONException e) {
                     e.printStackTrace();
 
+                    sharedPreferences.edit().putString("currentCity", current_city).apply();
+                    sharedPreferences.edit().putString("currentCountry", current_country).apply();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
