@@ -81,6 +81,7 @@ public class CityWeatherActivity extends AppCompatActivity {
         forcastHeadline = (TextView) findViewById(R.id.forcastTemperature);
         extendedForast = (TextView) findViewById(R.id.extendedForast);
         detailLink = (TextView) findViewById(R.id.moreDetailsView);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerViewForcast);
         mobileLink = "";
         detailUrl = "";
         listeners();
