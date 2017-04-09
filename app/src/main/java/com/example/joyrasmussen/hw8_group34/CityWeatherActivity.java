@@ -175,7 +175,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
                     } else {
                         JSONObject obj = arr.getJSONObject(0);
                         id = obj.getString("Key");
-                        showEverything();
+//                        showEverything();
                         Log.d("onResponse: ", id);
 
                         getForecast();
@@ -224,9 +224,16 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
                 try {
                     forecasts = parser.parseInput(body);
-                    adapter.notifyDataSetChanged();
 
-                    parser.parseInput(body);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+
+
                     headline = parser.getHeadline();
                     showEverything();
 
@@ -261,6 +268,15 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
                 nightCondition.setText(today.getNightPhrase());
 
 
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                       // Picasso.with(getApplicationContext()).load("http://i.imgur.com/DvpvklR.png").into(imageView);
+                    }
+                });
 
 
             }
