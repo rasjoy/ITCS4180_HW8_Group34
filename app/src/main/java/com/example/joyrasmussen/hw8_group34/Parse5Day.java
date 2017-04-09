@@ -51,7 +51,7 @@ public class Parse5Day {
                     date, link, minTemp, maxTemp, mobileLink);
 
             forecasts.add(forecast);
-            Log.i("forecast: ", forecast.toString());
+
 
         }
 

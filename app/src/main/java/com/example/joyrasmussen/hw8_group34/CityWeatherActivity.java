@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -308,7 +309,18 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
    @Override
     public void detailUpdate(View v) {
-        //OneDayForecast forecast =
+        int position = recyclerView.getChildAdapterPosition(v);
+        OneDayForecast detailFor = forecasts.get(position);
+        detailUrl = detailFor.getDetailURL();
+
+       String high = "c".equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("temp_unit", "")) ?
+               String.format( "%.2f", 32 + ( 1.8 * detailFor.getTempMax())) : String.format( "%.2f", detailFor.getTempMax());
+       String low = "c".equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("temp_unit", "")) ?
+               String.format( "%.2f", 32 + ( 1.8 * detailFor.getTempMin())) : String.format( "%.2f", detailFor.getTempMin());
+      temperature.setText("Temperature: " + high + "°/" + low + "°");
+
+
+
     }
 
     @Override
@@ -318,10 +330,15 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     }
 
     public void setAdapter(){
-        adapter = new ForcastAdapater(this, this, forecasts);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        recyclerView.setAdapter(adapter);
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter = new ForcastAdapater(CityWeatherActivity.this, CityWeatherActivity.this, forecasts);
+                LinearLayoutManager manager = new LinearLayoutManager(CityWeatherActivity.this, LinearLayoutManager.HORIZONTAL, false);
+                recyclerView.setLayoutManager(manager);
+                recyclerView.setAdapter(adapter);
+            }
+        });
 
     }
 
