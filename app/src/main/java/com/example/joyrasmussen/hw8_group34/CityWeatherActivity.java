@@ -279,7 +279,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         forcastHeadline.setText(headline);
 
         OneDayForecast today = forecasts.get(i);
-
+        detailUrl = today.getMobileLink();
         SimpleDateFormat formater = new SimpleDateFormat("MMMM dd, yyyy");
         String forecastToday = "Forecast on: " + formater.format(new Date(Long.parseLong(today.getDate())*1000));
         forcastOn.setText(forecastToday);
@@ -336,7 +336,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     public void detailUpdate(View v) {
         int position = recyclerView.getChildAdapterPosition(v);
         OneDayForecast detailFor = forecasts.get(position);
-        detailUrl = detailFor.getMobileLink();
+
         showEverything(position);
 
 
