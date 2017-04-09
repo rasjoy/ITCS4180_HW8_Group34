@@ -105,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
     TextView currentUpdatedLast;
     ImageView currentWeatherImage;
 
+    TextView savedCitiesTextMain;
+
     SharedPreferences sharedPreferences;
     LinearLayoutManager mLayoutManager;
 
@@ -122,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
         currentUpdatedLast = (TextView) findViewById(R.id.currentUpdatedLast);
         currentWeatherImage = (ImageView) findViewById(R.id.currentWeatherImage);
 
+        savedCitiesTextMain = (TextView) findViewById(R.id.savedCitiesTextMain);
 
         SavedCity charlotte = new SavedCity("349818", "Charlotte", "US", true);
         savedCityReference.child("349818").setValue(charlotte);
@@ -139,17 +142,10 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
         if (!current_city.equals("") && !current_country.equals("")) {
             prefListener();
-
-
-        }
-        if(!current_city.equals("") && !current_country.equals("")){
-
-            //Hide button & textview, show weather widgets
             alternateDisplay(current_city_key);
+
         }
-
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -198,8 +194,6 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 SavedCity city = dataSnapshot.getValue(SavedCity.class);
-
-
 
             }
 
@@ -454,6 +448,10 @@ public void  populateRecyclerView(){
         protected void populateViewHolder(final RecycViewHolder viewHolder, final SavedCity model, final int position) {
             final DatabaseReference savedRef = getRef(position);
             final String key = savedRef.getKey();
+
+            if(model != null){
+                savedCitiesTextMain.setVisibility(View.GONE);
+            }
             Log.d("populateViewHolder: ", model.get_id() + "getKey " + key + "name " + model.getName());
             viewHolder.setCityName(model.getName() + ", " + model.getCountry());
             viewHolder.setFavorite(model.isFav());
