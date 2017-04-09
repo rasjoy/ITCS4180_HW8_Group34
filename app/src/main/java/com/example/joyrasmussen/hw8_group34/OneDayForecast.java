@@ -86,6 +86,14 @@ public class OneDayForecast {
         this.tempMax = tempMax;
     }
 
+    public String getMobileLink() {
+        return mobileLink;
+    }
+
+    public void setMobileLink(String mobileLink) {
+        this.mobileLink = mobileLink;
+    }
+
     @Override
     public String toString() {
         return "OneDayForecast{" +

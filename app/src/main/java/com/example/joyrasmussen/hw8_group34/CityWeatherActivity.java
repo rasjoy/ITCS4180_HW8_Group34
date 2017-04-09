@@ -98,7 +98,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
         nightImage = (ImageView) findViewById(R.id.imageView2);
         forcastOn = (TextView) findViewById(R.id.forcastOnTextView);
         temperature = (TextView) findViewById(R.id.forcastTemperature);
-        forcastHeadline = (TextView) findViewById(R.id.forcastTemperature);
+        forcastHeadline = (TextView) findViewById(R.id.forcastHeadlines);
         extendedForast = (TextView) findViewById(R.id.extendedForast);
         detailLink = (TextView) findViewById(R.id.moreDetailsView);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewForcast);
@@ -218,8 +218,8 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
 
         OkHttpClient client = new OkHttpClient();
 
-        String url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/349818?apikey=zzAnkMX16zZhnHzpY2LvaJFp69R7JDM4";
-        url = url.replace("349818", id);
+        String url = MainActivity.FIVE_DAY_FORCAST;
+        url = url.replace("{CITY_UNIQUE_KEY}", id).replace("{YOUR_API_KEY}", MainActivity.API_Key);
 
         Request request = new Request.Builder()
                 .url(url)
@@ -248,10 +248,13 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
                     forecasts = parser.parseInput(body);
                     headline = parser.getHeadline();
 
+                    mobileLink = parser.getMobileLink();
+
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
 
+                            setHeadline();
                             setAdapter();
                             showEverything(0);
                         }
@@ -333,7 +336,7 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
     public void detailUpdate(View v) {
         int position = recyclerView.getChildAdapterPosition(v);
         OneDayForecast detailFor = forecasts.get(position);
-        detailUrl = detailFor.getDetailURL();
+        detailUrl = detailFor.getMobileLink();
         showEverything(position);
 
 
@@ -410,6 +413,10 @@ public class CityWeatherActivity extends AppCompatActivity implements ForcastAda
             temperature.setText("Temperature: " + high + "°"+ units+ "/" + lower + "°"+units);
         }
 
+
+    }
+    public void setHeadline(){
+        forcastHeadline.setText(headline);
 
     }
 }

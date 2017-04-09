@@ -2,6 +2,8 @@ package com.example.joyrasmussen.hw8_group34;
 
 import android.util.Log;
 
+import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +13,7 @@ import java.util.ArrayList;
 public class Parse5Day {
 
     public String headline;
+    public String mobileLink;
     CityWeatherActivity cityWeatherActivity;
 
     public ArrayList<OneDayForecast> parseInput(String in)throws JSONException{
@@ -21,6 +24,7 @@ public class Parse5Day {
 
         JSONObject headlineObj = obj.getJSONObject("Headline");
         headline = headlineObj.getString("Text");
+        mobileLink = headlineObj.getString("MobileLink");
 
         JSONArray dailyForecasts = obj.getJSONArray("DailyForecasts");
 
@@ -67,6 +71,11 @@ public class Parse5Day {
 
     public String getHeadline() {
         return headline;
+
+    }
+    public String getMobileLink(){
+        return  mobileLink;
+
 
     }
 }
