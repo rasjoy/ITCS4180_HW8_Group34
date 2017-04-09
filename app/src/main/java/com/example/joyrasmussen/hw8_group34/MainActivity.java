@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements EditCityDialogFra
 
 
          populateRecyclerView();
-        //Check if current city/country is set in shared preferences
+        //Check if current city/country is set in shared preference
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         current_city = sharedPreferences.getString("currentCity", "");
